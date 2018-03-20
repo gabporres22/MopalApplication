@@ -1,0 +1,12 @@
+sourceSets.main {
+    java.srcDirs = []
+}
+
+test {
+    workingDir = ".."
+
+}
+
+dependencies {
+    compile project(':mopal:app:model')
+}

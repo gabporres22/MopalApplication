@@ -1,0 +1,91 @@
+plugins { id "tekgenesis.main" version "0.5.14" }
+
+apply plugin: 'idea'
+
+idea {
+    project {
+        //if you want to set specific jdk and language level
+        jdkName = '1.8'
+        languageLevel = '1.8'
+    }
+}
+
+tekgenesis {
+    dependencies {
+        suigeneris       'com.tekgenesis:suigeneris'
+    }
+    repositories {
+        tekgenesis token : "sr5pBgMhbx1gz+dQf1ODIgu/BbpmtlF70HruOcmhbo4="
+        s3      s3Bucket : "tekgenesis-distributions"
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.5.1'
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'tekgenesis.mm'
+
+    compileJava.options.encoding = 'UTF-8'
+
+    ext.buildNumber = System.getProperty("suigen.build.number", "1")
+    ext.buildBranch = System.getProperty("suigen.build.branch", "master")
+    ext.buildKey = buildVersion + "." + buildNumber + "-" + buildBranch
+
+
+    repositories {
+        mavenCentral()
+    }
+
+    configurations {
+        all*.exclude group: 'commons-logging'
+        provided
+    }
+
+    compileJava {
+        options.compilerArgs = ["-Xlint:all", "-Werror"]
+    }
+    compileTestJava {
+        options.compilerArgs = ["-Xlint:all", "-Werror"]
+    }
+
+    ext {
+        //Common Libraries
+        annotations     = 'com.intellij:annotations:9.0.4'
+        httpClient      = 'org.apache.httpcomponents:httpclient:4.3.1'
+        hsqldb          = 'org.hsqldb:hsqldb:2.3.3'
+        junitToolBox    = 'com.googlecode.junit-toolbox:junit-toolbox:2.4'
+        oracle          = rootProject.files("lib/ojdbc7.jar")
+        postgres        = rootProject.files("lib/postgresql-9.1-903.jdbc4.jar")
+        toolsJar        = files("${System.properties['java.home']}/../lib/tools.jar")
+        jetty           = rootProject.fileTree(dir: 'suigeneris/lib/boot', include: 'jetty*.jar')
+     }
+
+    dependencies {
+        provided annotations
+        provided toolsJar
+
+        testCompile junitToolBox
+        testRuntime hsqldb
+        testRuntime oracle
+        testRuntime postgres
+    }
+
+    test {
+        workingDir = "../.."
+        systemProperty 'test.databases', System.getProperty("test.databases", "mem")
+        systemProperty 'test.metrics', System.getProperty("test.metrics", "true")
+
+        useJUnit {
+            // Just run regular tests (exluding selenium, lrg and integration
+            // excludeCategories()
+        }
+        maxHeapSize '4g'
+        //jvmArgs '-XX:+HeapDumpOnOutOfMemoryError'
+    }
+
+    def moduleName =  projectDir.parentFile.name + "-" + project.name
+}

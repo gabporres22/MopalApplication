@@ -1,0 +1,24 @@
+apply plugin: 'tekgenesis.dist'
+
+description = "Mopal Application"
+
+group = "com.mopal"
+version "${buildVersion}.${buildNumber}-${buildBranch}"
+ext.artifactName = "view"
+
+distributions {
+    application {
+        baseName = artifactName
+        type = 'application'
+        projects = [ project(':mopal:app:view') ]
+    }
+    metamodels {
+        baseName = "${artifactName}-metamodels"
+        projects = [ project(':mopal:app:view'), project(':mopal:app:model'), project(':mopal:app:core') ]
+    }
+
+    services {
+        baseName = "${artifactName}-services"
+        projects = [ project(':mopal:app:services'), project(':mopal:app:view') ]
+    }
+}

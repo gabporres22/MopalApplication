@@ -1,0 +1,1 @@
+include "mopal:app", "mopal:app:view", "mopal:app:model", "mopal:app:core", "mopal:app:services"
