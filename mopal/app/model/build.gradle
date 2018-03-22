@@ -1,0 +1,10 @@
+sourceSets.main {
+    java.srcDirs = ['src/main/java','src_managed/main/mm']
+}
+
+task rebuild {
+    dependsOn clean, build
+}
+
+def moduleName =  projectDir.parentFile.parentFile.name + "-" + projectDir.parentFile.name + "-" + project.name
+jar.archiveName = moduleName + ".jar"

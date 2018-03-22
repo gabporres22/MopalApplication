@@ -1,20 +1,21 @@
 apply plugin: 'distribution'
 
 sourceSets.main {
-    java.srcDirs = []
+    java.srcDirs = ['src/main/java','src_managed/main/mm']
 }
 
 task rebuild {
     dependsOn clean, build
 }
 
-test {
-    workingDir = "../.."
-}
-
 dependencies {
+    mm project(':mopal:app:model')
     compile project(':mopal:app:model')
+
+    mm project(':mopal:app:core')
     compile project(':mopal:app:core')
+    
+    mm project(':mopal:app:services')
     compile project(':mopal:app:services')
 }
 
@@ -23,10 +24,11 @@ jar.archiveName = moduleName + ".jar"
 
 distributions {
     main {
-        baseName "gulliver"
+        baseName "mopal"
         contents  {
             fileMode = 0755
             from { jar.archivePath }
+            from { configurations.runtime }
             into 'lib'
         }
     }
