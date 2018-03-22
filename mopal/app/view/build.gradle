@@ -9,13 +9,13 @@ task rebuild {
 }
 
 dependencies {
-    mm project(':mopal:app:model')
+//    mm project(':mopal:app:model')
     compile project(':mopal:app:model')
 
-    mm project(':mopal:app:core')
+//    mm project(':mopal:app:core')
     compile project(':mopal:app:core')
     
-    mm project(':mopal:app:services')
+//    mm project(':mopal:app:services')
     compile project(':mopal:app:services')
 }
 
