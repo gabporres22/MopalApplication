@@ -16,7 +16,7 @@ enum Nivel{
     NINGUNA;
     CAMINO;
     EVANGELIO;
-    INICIACICON;
+    INICIACION;
     PROFUNDIZACION;
     PERFECCIONAMIENTO;
     PREPARACION_COMUNIDAD_DE_VIDA;
@@ -31,6 +31,7 @@ entity Comunidad described_by descripcion, localidad searchable by{nivelComunida
     nivelComunidad:     Nivel;
     localidad:          Localidad;
     descripcion:        String;
+    cantidadPersonas:   Int;
 }
 
 entity Persona described_by nombre, apellido searchable by {nombre; apellido;}{

@@ -4,6 +4,7 @@ import com.mopal.model.Persona;
 import com.mopal.model.PersonaRelacionada;
 import com.mopal.model.Localidad;
 import com.mopal.model.Comunidad;
+import com.mopal.model.Nivel;
 
 form LocalidadForm "Localidad Form" : com.mopal.model.Localidad {
     header {
@@ -41,22 +42,22 @@ form PersonaForm "Persona Form" : com.mopal.model.Persona {
         search_box, col 4, style "pull-right";
     };
     "Id"                   : id, internal, optional;
-    "Nombre"               : nombre;
-    "Apellido"             : apellido;
-    "Localidad"            : localidad, on_new_form LocalidadForm;
-    "Fecha Nacimiento"     : fechaNacimiento;
-    "Tipo Camino"          : tipoCamino, default INGRESANTE;
-    "Nivel"                : nivel, disable when tipoCamino == INGRESANTE;
+    "Nombre"               : nombre, required;
+    "Apellido"             : apellido, required;
+    "Localidad"            : localidad, required, on_new_form LocalidadForm;
+    "Fecha Nacimiento"     : fechaNacimiento, required;
+    "Tipo Camino"          : tipoCamino, required, default INGRESANTE;
+    "Nivel"                : nivel, required, disable when tipoCamino == INGRESANTE;
     "Comunidad"            : comunidad, filter (nivelComunidad = nivel), disable when nivel == NINGUNA, on_new_form ComunidadForm, optional;
-    "Cantidad Pascuas"     : cantidadPascuas, default 0, mask decimal;
+    "Cantidad Pascuas"     : cantidadPascuas, required, default 0, mask decimal;
     "Cantidad Hijos"       : cantidadHijos, default 0, mask decimal, optional;
-    "Telefono De Contacto" : telefonoDeContacto;
-    "Tipo Estado Civil"    : tipoEstadoCivil, default SOLTERO, optional;
+    "Telefono De Contacto" : telefonoDeContacto, required, custom_mask "####################";
+    "Tipo Estado Civil"    : tipoEstadoCivil, required, default SOLTERO, optional;
     "Asistencia Jueves"    : asistenciaJueves;
     "Asistencia Viernes"   : asistenciaViernes;
     "Asistencia Sabado"    : asistenciaSabado;
-    contribucionPascua "Contribucion Pascua"  : Boolean, display, is montoContribucion > 0 ;
-    montoContribucion "Monto Contribucion"    : Decimal, default 0, mask decimal;
+    "Contribucion Pascua"  : contribucionPascua, internal, is montoContribucionValue > 0 ;
+    montoContribucionValue "Monto Contribucion"    : montoContribucion, required, default 0, mask currency;
     "Observaciones"        : observaciones, optional;
     footer {
         button(save);
@@ -87,6 +88,19 @@ form PersonaFormListing {
         message(title), col 12;
     };
 
+    filtros "Filtros": vertical, collapsible {
+        nombreFiltro: String, hint "Nombre", optional, col 2;
+        apellidoFiltro: String, hint "Apellido", optional, col 2;
+        localidadFiltro:    Localidad, hint "Localidad", on_new_form LocalidadForm, optional, col 2;
+        nivelFiltro:        Nivel, hint "Nivel", optional, col 2, on_ui_change updateComunidadFiltro;
+        comunidadFiltro:    Comunidad, hint "Comunidad", filter (nivelComunidad = nivelFiltro), disable when nivelFiltro == NINGUNA || nivelFiltro == null, on_new_form ComunidadForm, optional, col 2;
+    };
+
+    horizontal, col 12{
+        buscar  "Buscar"    : button, icon search, on_click buscar, shortcut "ctrl+b";
+        resetear "Resetear" : button, icon eraser, on_click resetearFiltros;
+    };
+
     personas:   Persona, table(10), on_load loadPersonas, sortable {
         id        "Id"              : id, internal, optional;
         nombre    "Nombre"          : nombre, display;
@@ -95,9 +109,13 @@ form PersonaFormListing {
         edad      "Edad"            : Int, display;
         nivel     "Nivel"           : nivel, display;
         comunidad "Comunidad"       : String, display;
+        asistenciaJueves "J"        : asistenciaJueves, display;
+        asistenciaViernes "V"       : asistenciaViernes, display;
+        asistenciaSabado "S"        : asistenciaSabado, display;
         hijos     "Hijos"           : cantidadHijos, display;
         telefono  "Telefono"        : telefonoDeContacto, display;
         contribucion "Contribuyo"   : contribucionPascua, display;
+        editarPersona "Editar" : label, on_click editarPersona, icon pencil_square_o;
     };
 
     footer {
@@ -108,6 +126,7 @@ form PersonaFormListing {
 
 menu MopalMenu {
 	PersonaForm;
+	LocalidadForm;
 	ComunidadFormListing;
 	PersonaFormListing;
 }

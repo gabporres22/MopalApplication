@@ -1,4 +1,4 @@
--- @Generated at 2018-03-22 20:08:16
+-- @Generated at 2018-03-23 03:41:45
 
 -- SQL for Schema MODEL --
 
@@ -20,6 +20,7 @@ create table QName(MODEL, COMUNIDAD) (
 	NIVEL_COMUNIDAD                   nvarchar(50)     default 'NINGUNA'        not null,
 	LOCALIDAD_ID                      int                                       not null,
 	DESCRIPCION                       nvarchar(255)    default EmptyString      not null,
+	CANTIDAD_PERSONAS                 int              default 0                not null,
 	UPDATE_TIME                       datetime(3)      default CurrentTime      not null,
 
 	constraint PK_COMUNIDAD           primary key (ID)

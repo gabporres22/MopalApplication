@@ -18,6 +18,7 @@ create table QName(MODEL, COMUNIDAD) (
 	NIVEL_COMUNIDAD                   nvarchar(50)     default 'NINGUNA'        not null,
 	LOCALIDAD_ID                      int                                       not null,
 	DESCRIPCION                       nvarchar(255)    default EmptyString      not null,
+	CANTIDAD_PERSONAS                 int              default 0                not null,
 	UPDATE_TIME                       datetime(3)      default CurrentTime      not null,
 
 	constraint PK_COMUNIDAD           primary key (ID)
