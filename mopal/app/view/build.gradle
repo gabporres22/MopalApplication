@@ -33,3 +33,30 @@ distributions {
         }
     }
 }
+
+processResources.doLast{
+    createVersionProperties()
+}
+
+def createVersionProperties(){
+    def versionProps = new File(project.buildDir, '/mopal.version')
+    versionProps.getParentFile().mkdirs()
+    versionProps.write("#Mopal Version Info")
+    versionProps.append("\nbuild.version=" + buildVersion)
+    versionProps.append("\nbuild.number=" + buildNumber+"\n")
+}
+
+jar {
+    //Include the version file in the JAR root
+    from { project.buildDir.absolutePath + '/mopal.version' }
+}
+
+task copyVersionFile(type: Copy) {
+    from { project.buildDir.absolutePath + '/mopal.version' }
+    into project.buildDir.absolutePath + '/install/mopal'
+}
+
+installDist.doLast {
+    //The version file needs to be in the distribution root
+    copyVersionFile.execute()
+}

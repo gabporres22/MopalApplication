@@ -1,4 +1,4 @@
-package com.mopal.model;
+package com.mopal.model schema data;
 
 enum TipoCamino{
     INGRESANTE;
@@ -37,6 +37,7 @@ entity Comunidad described_by descripcion, localidad searchable by{nivelComunida
 entity Persona described_by nombre, apellido searchable by {nombre; apellido;}{
     nombre:                 String;
     apellido:               String;
+    email:                  String;
     localidad:              Localidad;
     fechaNacimiento:        Date;
     tipoCamino:             TipoCamino, default INGRESANTE;
@@ -44,22 +45,25 @@ entity Persona described_by nombre, apellido searchable by {nombre; apellido;}{
     comunidad:              Comunidad, optional;
     cantidadPascuas:        Int, default 0;
     cantidadHijos:          Int, optional, default 0;
-    personaRelacionada:     entity PersonaRelacionada* {
-        nombre:                 String;
-        apellido:               String;
-        fechaNacimiento:        Date;
-        telefonoDeContacto:     String;
-        asistenciaJueves:       Boolean;
-        asistenciaViernes:      Boolean;
-        asistenciaSabado:       Boolean;
-        observaciones:          String;
-    };
     telefonoDeContacto:     String;
     tipoEstadoCivil:        EstadoCivil, optional, default SOLTERO;
     asistenciaJueves:       Boolean;
     asistenciaViernes:      Boolean;
     asistenciaSabado:       Boolean;
-    contribucionPascua:     Boolean;
     montoContribucion:      Decimal(10, 2);
     observaciones:          String, optional;
+    personasRelacionadas:   PersonaRelacionada*;
+}
+
+entity PersonaRelacionada described_by nombre, apellido {
+    persona:                Persona;
+    nombre:                 String;
+    apellido:               String;
+    fechaNacimiento:        Date;
+    telefonoDeContacto:     String;
+    grupoReferencia:        String;
+    asistenciaJueves:       Boolean;
+    asistenciaViernes:      Boolean;
+    asistenciaSabado:       Boolean;
+    observaciones:          String;
 }

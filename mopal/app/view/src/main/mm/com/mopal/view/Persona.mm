@@ -44,6 +44,7 @@ form PersonaForm "Persona Form" : com.mopal.model.Persona {
     "Id"                   : id, internal, optional;
     "Nombre"               : nombre, required;
     "Apellido"             : apellido, required;
+    "Email"                : email, optional;
     "Localidad"            : localidad, required, on_new_form LocalidadForm;
     "Fecha Nacimiento"     : fechaNacimiento, required;
     "Tipo Camino"          : tipoCamino, required, default INGRESANTE;
@@ -56,7 +57,6 @@ form PersonaForm "Persona Form" : com.mopal.model.Persona {
     "Asistencia Jueves"    : asistenciaJueves;
     "Asistencia Viernes"   : asistenciaViernes;
     "Asistencia Sabado"    : asistenciaSabado;
-    "Contribucion Pascua"  : contribucionPascua, internal, is montoContribucionValue > 0 ;
     montoContribucionValue "Monto Contribucion"    : montoContribucion, required, default 0, mask currency;
     "Observaciones"        : observaciones, optional;
     footer {
@@ -114,7 +114,7 @@ form PersonaFormListing {
         asistenciaSabado "S"        : asistenciaSabado, display;
         hijos     "Hijos"           : cantidadHijos, display;
         telefono  "Telefono"        : telefonoDeContacto, display;
-        contribucion "Contribuyo"   : contribucionPascua, display;
+        contribucion "Contribuyo"   : montoContribucion, display;
         editarPersona "Editar" : label, on_click editarPersona, icon pencil_square_o;
     };
 
