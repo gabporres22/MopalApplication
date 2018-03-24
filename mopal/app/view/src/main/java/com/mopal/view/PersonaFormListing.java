@@ -1,6 +1,7 @@
 package com.mopal.view;
 
 
+import com.mopal.core.NivelHelper;
 import com.mopal.model.Comunidad;
 import com.mopal.model.Localidad;
 import com.mopal.model.Nivel;
@@ -14,6 +15,8 @@ import tekgenesis.form.Action;
 import tekgenesis.form.MappingCallback;
 import tekgenesis.persistence.Criteria;
 
+import java.math.BigDecimal;
+
 import static com.mopal.model.g.PersonaTable.PERSONA;
 import static tekgenesis.common.core.Option.option;
 
@@ -21,11 +24,16 @@ import static tekgenesis.common.core.Option.option;
 public class PersonaFormListing
     extends PersonaFormListingBase
 {
+    @Override
+    public void load() {
+        super.load();
+        setNivelNinguno(NivelHelper.getNivelNinguno());
+    }
 
     @NotNull
     @Override
     public Action updateComunidadFiltro() {
-        if(! option(getNivelFiltro()).isPresent() || (option(getNivelFiltro()).isPresent() && getNivelFiltro().equals(Nivel.NINGUNA)))
+        if(! option(getNivelFiltro()).isPresent() || (option(getNivelFiltro()).isPresent() && getNivelFiltro().equals(getNivelNinguno())))
             setComunidadFiltro(null);
 
         return actions.getDefault();
@@ -65,8 +73,8 @@ public class PersonaFormListing
         final Criteria nombreCriteria = nombre.isPresent() ? PERSONA.NOMBRE.contains(nombre.get()) : Criteria.EMPTY;
         final Criteria apellidoCriteria = apellido.isPresent() ? PERSONA.APELLIDO.contains(apellido.get()) : Criteria.EMPTY;
         final Criteria localidadCriteria = localidad.isPresent() ? PERSONA.LOCALIDAD_ID.eq(localidad.get().getId()) : Criteria.EMPTY;
-        final Criteria nivelCriteria = nivel.isPresent() ? PERSONA.NIVEL.eq(nivel.get()) : Criteria.EMPTY;
-        final Criteria comunidadCriteria = comunidad.isPresent() && nivel.isPresent() && !nivel.get().equals(Nivel.NINGUNA) ? PERSONA.COMUNIDAD_ID.eq(comunidad.get().getId()) : Criteria.EMPTY;
+        final Criteria nivelCriteria = nivel.isPresent() ? PERSONA.NIVEL_ID.eq(nivel.get().getId()) : Criteria.EMPTY;
+        final Criteria comunidadCriteria = comunidad.isPresent() && nivel.isPresent() && !nivel.get().equals(getNivelNinguno()) ? PERSONA.COMUNIDAD_ID.eq(comunidad.get().getId()) : Criteria.EMPTY;
 
         return PersonaBase.listWhere(nombreCriteria.and(apellidoCriteria.and(localidadCriteria.and(nivelCriteria).and(comunidadCriteria)))).toList();
     }
@@ -85,7 +93,9 @@ public class PersonaFormListing
         public void populate(@NotNull Persona persona) {
             super.populate(persona);
             setEdad(DateOnly.current().yearsFrom(persona.getFechaNacimiento()));
-            if(persona.getNivel().equals(Nivel.NINGUNA))
+            setContribucion(persona.getMontoContribucion().compareTo(BigDecimal.ZERO) > 0);
+
+            if(persona.getNivel().equals(getNivelNinguno()))
                 setComunidad("");
             else
                 setComunidad(persona.getComunidad().getDescripcion() + " (" + persona.getComunidad().getLocalidad() + ")");

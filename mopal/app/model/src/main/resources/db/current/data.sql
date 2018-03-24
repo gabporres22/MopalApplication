@@ -8,6 +8,9 @@ create sequence QName(DATA, COMUNIDAD_SEQ)
 create sequence QName(DATA, LOCALIDAD_SEQ)
 	start with SequenceStartValue(1) increment by 1 SequenceCache;;
 
+create sequence QName(DATA, NIVEL_SEQ)
+	start with SequenceStartValue(1) increment by 1 SequenceCache;;
+
 create sequence QName(DATA, PERSONA_SEQ)
 	start with SequenceStartValue(1) increment by 1 SequenceCache;;
 
@@ -18,7 +21,7 @@ create sequence QName(DATA, PERSONA_RELACIONADA_SEQ)
 
 create table QName(DATA, COMUNIDAD) (
 	ID                                Serial(1,COMUNIDAD_SEQ)                   not null,
-	NIVEL_COMUNIDAD                   nvarchar(50)     default 'NINGUNA'        not null,
+	NIVEL_COMUNIDAD_ID                int                                       not null,
 	LOCALIDAD_ID                      int                                       not null,
 	DESCRIPCION                       nvarchar(255)    default EmptyString      not null,
 	CANTIDAD_PERSONAS                 int              default 0                not null,
@@ -35,15 +38,24 @@ create table QName(DATA, LOCALIDAD) (
 	constraint PK_LOCALIDAD           primary key (ID)
 );;
 
+create table QName(DATA, NIVEL) (
+	ID                                Serial(1,NIVEL_SEQ)                       not null,
+	DESCRIPCION                       nvarchar(255)    default EmptyString      not null,
+	ORDEN                             int              default 0                not null,
+	UPDATE_TIME                       datetime(3)      default CurrentTime      not null,
+
+	constraint PK_NIVEL               primary key (ID)
+);;
+
 create table QName(DATA, PERSONA) (
 	ID                                Serial(1,PERSONA_SEQ)                     not null,
 	NOMBRE                            nvarchar(255)    default EmptyString      not null,
 	APELLIDO                          nvarchar(255)    default EmptyString      not null,
-	EMAIL                             nvarchar(255)    default EmptyString      not null,
+	EMAIL                             nvarchar(255),
 	LOCALIDAD_ID                      int                                       not null,
 	FECHA_NACIMIENTO                  date             default CurrentDate      not null,
 	TIPO_CAMINO                       nvarchar(50)     default 'INGRESANTE'     not null,
-	NIVEL                             nvarchar(50)     default 'NINGUNA'        not null,
+	NIVEL_ID                          int                                       not null,
 	COMUNIDAD_ID                      int,
 	CANTIDAD_PASCUAS                  int              default 0                not null,
 	CANTIDAD_HIJOS                    int              default 0,
@@ -87,6 +99,13 @@ create table QName(DATA, _METADATA) (
 	constraint PK_METADATA            primary key (VERSION)
 );;
 
+create index IndexName(DATA, NIVEL_ORDEN_IDXT)
+	on QName(DATA, NIVEL) (ORDEN) IndexTableSpace;;
+
+alter table QName(DATA, COMUNIDAD) add constraint NIVEL_COMUNIDAD_COMUNIDAD_FK
+	foreign key (NIVEL_COMUNIDAD_ID)
+	references QName(DATA, NIVEL) (ID);;
+
 alter table QName(DATA, COMUNIDAD) add constraint LOCALIDAD_COMUNIDAD_FK
 	foreign key (LOCALIDAD_ID)
 	references QName(DATA, LOCALIDAD) (ID);;
@@ -94,6 +113,10 @@ alter table QName(DATA, COMUNIDAD) add constraint LOCALIDAD_COMUNIDAD_FK
 alter table QName(DATA, PERSONA) add constraint LOCALIDAD_PERSONA_FK
 	foreign key (LOCALIDAD_ID)
 	references QName(DATA, LOCALIDAD) (ID);;
+
+alter table QName(DATA, PERSONA) add constraint NIVEL_PERSONA_FK
+	foreign key (NIVEL_ID)
+	references QName(DATA, NIVEL) (ID);;
 
 alter table QName(DATA, PERSONA) add constraint COMUNIDAD_PERSONA_FK
 	foreign key (COMUNIDAD_ID)
@@ -106,6 +129,7 @@ alter table QName(DATA, PERSONA_RELACIONADA) add constraint PERSONA_PERSONA_RELA
 -- if NeedsSerialComment
 comment on column QName(DATA,COMUNIDAD).ID                 is 'Serial(1,COMUNIDAD_SEQ)';;
 comment on column QName(DATA,LOCALIDAD).ID                 is 'Serial(1,LOCALIDAD_SEQ)';;
+comment on column QName(DATA,NIVEL).ID                     is 'Serial(1,NIVEL_SEQ)';;
 comment on column QName(DATA,PERSONA).ID                   is 'Serial(1,PERSONA_SEQ)';;
 comment on column QName(DATA,PERSONA_RELACIONADA).ID       is 'Serial(1,PERSONA_RELACIONADA_SEQ)';;
 -- end

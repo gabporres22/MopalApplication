@@ -25,10 +25,27 @@ form ComunidadForm "Comunidad Form" : com.mopal.model.Comunidad {
         message(entity), col 8;
         search_box, col 4, style "pull-right";
     };
-    "Id"              : id, internal, optional;
-    "Nivel Comunidad" : nivelComunidad;
-    "Localidad"       : localidad, on_new_form LocalidadForm;
-    "Descripcion"     : descripcion;
+    "Id"                : id, internal, optional;
+    "Nivel Comunidad"   : nivelComunidad;
+    "Localidad"         : localidad, on_new_form LocalidadForm;
+    "Descripcion"       : descripcion;
+    "Cantidad Personas" : cantidadPersonas;
+    footer {
+        button(save);
+        button(cancel);
+        button(delete), style "pull-right";
+    };
+}
+
+
+form NivelForm "Nivel Form" : com.mopal.model.Nivel {
+    header {
+        message(entity), col 8;
+        search_box, col 4, style "pull-right";
+    };
+    "Id"          : id, internal, optional;
+    "Descripcion" : descripcion;
+    "Orden"       : orden;
     footer {
         button(save);
         button(cancel);
@@ -41,28 +58,75 @@ form PersonaForm "Persona Form" : com.mopal.model.Persona {
         message(entity), col 12;
         search_box, col 4, style "pull-right";
     };
-    "Id"                   : id, internal, optional;
-    "Nombre"               : nombre, required;
-    "Apellido"             : apellido, required;
-    "Email"                : email, optional;
-    "Localidad"            : localidad, required, on_new_form LocalidadForm;
-    "Fecha Nacimiento"     : fechaNacimiento, required;
-    "Tipo Camino"          : tipoCamino, required, default INGRESANTE;
-    "Nivel"                : nivel, required, disable when tipoCamino == INGRESANTE;
-    "Comunidad"            : comunidad, filter (nivelComunidad = nivel), disable when nivel == NINGUNA, on_new_form ComunidadForm, optional;
-    "Cantidad Pascuas"     : cantidadPascuas, required, default 0, mask decimal;
-    "Cantidad Hijos"       : cantidadHijos, default 0, mask decimal, optional;
-    "Telefono De Contacto" : telefonoDeContacto, required, custom_mask "####################";
-    "Tipo Estado Civil"    : tipoEstadoCivil, required, default SOLTERO, optional;
-    "Asistencia Jueves"    : asistenciaJueves;
-    "Asistencia Viernes"   : asistenciaViernes;
-    "Asistencia Sabado"    : asistenciaSabado;
-    montoContribucionValue "Monto Contribucion"    : montoContribucion, required, default 0, mask currency;
-    "Observaciones"        : observaciones, optional;
-    footer {
+
+    nivelNinguno:           Nivel, internal;
+
+    "": vertical, col 6 {
+        "Id"                   : id, internal, optional;
+        "Nombre"               : nombre, required, label_col 4;
+        "Apellido"             : apellido, required, label_col 4;
+        "Telefono"             : telefonoDeContacto, required, custom_mask "####################", label_col 4;
+        "Localidad"            : localidad, required, on_new_form LocalidadForm, label_col 4;
+        "Fecha Nacimiento"     : fechaNacimiento, required, label_col 4;
+        "Email"                : email, optional, label_col 4;
+        "Estado Civil"         : tipoEstadoCivil, required, default SOLTERO, optional, label_col 4;
+        "Cantidad Hijos"       : cantidadHijos, default 0, mask decimal, optional, label_col 4;
+    };
+
+    "": vertical, col 6 {
+        "Tipo Camino"          : tipoCamino, required, default INGRESANTE, label_col 4;
+        "Nivel"                : nivel, required, disable when tipoCamino == INGRESANTE, default nivelNinguno, label_col 4;
+        "Comunidad"            : comunidad, filter (nivelComunidad = nivel), disable when nivel == nivelNinguno, on_new_form ComunidadForm, optional, label_col 4;
+        "Cantidad Pascuas"     : cantidadPascuas, required, default 0, mask decimal, label_col 4;
+
+        "Asistencias": horizontal, col 12 {
+            colAsistenciaJueves    : asistenciaJueves, no_label, placeholder "Jueves";
+            colAsistenciaViernes   : asistenciaViernes, no_label, placeholder "Viernes";
+            colAsistenciaSabado    : asistenciaSabado, no_label, placeholder "Sabado";
+        };
+        "Monto Contribucion"   : montoContribucion, required, default 0, mask currency, label_col 4;
+        "Observaciones"        : observaciones, text_area, optional, label_col 4;
+    };
+
+    footer, col 12 {
         button(save);
         button(cancel);
         button(delete), style "pull-right";
+    };
+}
+
+form NivelFormListing {
+    header {
+        message(title), col 12;
+    };
+
+    niveles: Nivel, table(10), on_load loadNiveles, sortable{
+        id              : id, internal;
+        descripcion     : descripcion, display;
+        orden           : orden, display;
+        editar "Editar" : label, on_click editar, icon pencil_square_o;
+    };
+
+    footer {
+        create "Create" :button, on_click crearNivel;
+        back "Back"     :button(cancel);
+    };
+}
+
+form LocalidadFormListing {
+    header {
+        message(title), col 12;
+    };
+
+    localidades: Localidad, table(10), on_load loadLocalidades, sortable {
+        id              : id, internal;
+        descripcion     : descripcion, display;
+        editar "Editar" : button, on_click editar, icon pencil_square_o;
+    };
+
+    footer {
+        create "Create" :button, on_click crearLocalidad;
+        back "Back"     :button(cancel);
     };
 }
 
@@ -72,9 +136,12 @@ form ComunidadFormListing {
     };
 
     comunidades: Comunidad, table, on_load loadComunidades, sortable {
-        nivelComunidad:     nivelComunidad, display;
-        localidad:          localidad, display;
-        descripcion:        descripcion, display;
+        id              : id, internal;
+        nivelComunidad  : nivelComunidad, display;
+        localidad       : localidad, display;
+        descripcion     : descripcion, display;
+        cantidad        : cantidadPersonas, display;
+        editar "Editar" : label, on_click editarComunidad, icon pencil_square_o;
     };
 
     footer {
@@ -88,12 +155,14 @@ form PersonaFormListing {
         message(title), col 12;
     };
 
+    nivelNinguno:           Nivel, internal;
+
     filtros "Filtros": vertical, collapsible {
         nombreFiltro: String, hint "Nombre", optional, col 2;
         apellidoFiltro: String, hint "Apellido", optional, col 2;
         localidadFiltro:    Localidad, hint "Localidad", on_new_form LocalidadForm, optional, col 2;
         nivelFiltro:        Nivel, hint "Nivel", optional, col 2, on_ui_change updateComunidadFiltro;
-        comunidadFiltro:    Comunidad, hint "Comunidad", filter (nivelComunidad = nivelFiltro), disable when nivelFiltro == NINGUNA || nivelFiltro == null, on_new_form ComunidadForm, optional, col 2;
+        comunidadFiltro:    Comunidad, hint "Comunidad", filter (nivelComunidad = nivelFiltro), disable when nivelFiltro == nivelNinguno || nivelFiltro == null, on_new_form ComunidadForm, optional, col 2;
     };
 
     horizontal, col 12{
@@ -102,7 +171,8 @@ form PersonaFormListing {
     };
 
     personas:   Persona, table(10), on_load loadPersonas, sortable {
-        id        "Id"              : id, internal, optional;
+        montoContribucion           : montoContribucion, internal;
+        id        "Id"              : id, internal;
         nombre    "Nombre"          : nombre, display;
         apellido  "Apellido"        : apellido, display;
         localidad "Localidad"       : localidad, display;
@@ -114,7 +184,7 @@ form PersonaFormListing {
         asistenciaSabado "S"        : asistenciaSabado, display;
         hijos     "Hijos"           : cantidadHijos, display;
         telefono  "Telefono"        : telefonoDeContacto, display;
-        contribucion "Contribuyo"   : montoContribucion, display;
+        contribucion "Contribuyo"   : Boolean, display;
         editarPersona "Editar" : label, on_click editarPersona, icon pencil_square_o;
     };
 
@@ -125,8 +195,8 @@ form PersonaFormListing {
 }
 
 menu MopalMenu {
-	PersonaForm;
-	LocalidadForm;
+    LocalidadFormListing;
+    NivelFormListing;
 	ComunidadFormListing;
 	PersonaFormListing;
 }

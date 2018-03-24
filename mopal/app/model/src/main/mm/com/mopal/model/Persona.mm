@@ -12,22 +12,16 @@ enum EstadoCivil{
     VIUDO;
 }
 
-enum Nivel{
-    NINGUNA;
-    CAMINO;
-    EVANGELIO;
-    INICIACION;
-    PROFUNDIZACION;
-    PERFECCIONAMIENTO;
-    PREPARACION_COMUNIDAD_DE_VIDA;
-    COMUNIDAD_DE_VIDA;
+entity Nivel index orden described_by descripcion searchable {
+    descripcion: String;
+    orden:  Int;
 }
 
 entity Localidad described_by descripcion searchable {
     descripcion: String;
 }
 
-entity Comunidad described_by descripcion, localidad searchable by{nivelComunidad; descripcion;} {
+entity Comunidad described_by descripcion, localidad searchable by{nivelComunidad; descripcion;}{
     nivelComunidad:     Nivel;
     localidad:          Localidad;
     descripcion:        String;
@@ -37,11 +31,11 @@ entity Comunidad described_by descripcion, localidad searchable by{nivelComunida
 entity Persona described_by nombre, apellido searchable by {nombre; apellido;}{
     nombre:                 String;
     apellido:               String;
-    email:                  String;
+    email:                  String, optional;
     localidad:              Localidad;
     fechaNacimiento:        Date;
     tipoCamino:             TipoCamino, default INGRESANTE;
-    nivel:                  Nivel, default NINGUNA;
+    nivel:                  Nivel;
     comunidad:              Comunidad, optional;
     cantidadPascuas:        Int, default 0;
     cantidadHijos:          Int, optional, default 0;
