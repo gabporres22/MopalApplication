@@ -94,6 +94,7 @@ public class PersonaFormListing
             super.populate(persona);
             setEdad(DateOnly.current().yearsFrom(persona.getFechaNacimiento()));
             setContribucion(persona.getMontoContribucion().compareTo(BigDecimal.ZERO) > 0);
+            setLocalidad(persona.getLocalidad() + " (" + persona.getBarrio() + ")");
 
             if(persona.getNivel().equals(getNivelNinguno()))
                 setComunidad("");

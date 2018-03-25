@@ -15,6 +15,6 @@ public class NivelHelper {
     }
 
     public static Nivel getNivelNinguno(){
-        return findWhere(NIVEL.DESCRIPCION.eq("NINGUNA"));
+        return findWhere(NIVEL.DESCRIPCION.eq("Ingresante"));
     }
 }

@@ -1,8 +1,9 @@
--- @Generated at 2018-03-24 06:58:13
-
 -- SQL for Schema DATA --
 
 -- if NeedsCreateSequence
+
+create sequence QName(DATA, BARRIO_SEQ)
+	start with SequenceStartValue(1) increment by 1 SequenceCache;;
 
 create sequence QName(DATA, COMUNIDAD_SEQ)
 	start with SequenceStartValue(1) increment by 1 SequenceCache;;
@@ -21,10 +22,20 @@ create sequence QName(DATA, PERSONA_RELACIONADA_SEQ)
 
 -- end
 
+create table QName(DATA, BARRIO) (
+	ID                                Serial(1,BARRIO_SEQ)                      not null,
+	LOCALIDAD_ID                      int                                       not null,
+	DESCRIPCION                       nvarchar(255)    default EmptyString      not null,
+	UPDATE_TIME                       datetime(3)      default CurrentTime      not null,
+
+	constraint PK_BARRIO              primary key (ID)
+);;
+
 create table QName(DATA, COMUNIDAD) (
 	ID                                Serial(1,COMUNIDAD_SEQ)                   not null,
 	NIVEL_COMUNIDAD_ID                int                                       not null,
 	LOCALIDAD_ID                      int                                       not null,
+	BARRIO_ID                         int,
 	DESCRIPCION                       nvarchar(255)    default EmptyString      not null,
 	CANTIDAD_PERSONAS                 int              default 0                not null,
 	UPDATE_TIME                       datetime(3)      default CurrentTime      not null,
@@ -55,13 +66,14 @@ create table QName(DATA, PERSONA) (
 	APELLIDO                          nvarchar(255)    default EmptyString      not null,
 	EMAIL                             nvarchar(255),
 	LOCALIDAD_ID                      int                                       not null,
+	BARRIO_ID                         int,
 	FECHA_NACIMIENTO                  date             default CurrentDate      not null,
 	TIPO_CAMINO                       nvarchar(50)     default 'INGRESANTE'     not null,
 	NIVEL_ID                          int                                       not null,
 	COMUNIDAD_ID                      int,
 	CANTIDAD_PASCUAS                  int              default 0                not null,
 	CANTIDAD_HIJOS                    int              default 0,
-	TELEFONO_DE_CONTACTO              nvarchar(255)    default EmptyString      not null,
+	TELEFONO_DE_CONTACTO              nvarchar(255),
 	TIPO_ESTADO_CIVIL                 nvarchar(50)     default 'SOLTERO',
 	ASISTENCIA_JUEVES                 boolean          default False CheckBoolConstraint(PERSONA_ASISTENCIA_JUEVES_B, ASISTENCIA_JUEVES) not null,
 	ASISTENCIA_VIERNES                boolean          default False CheckBoolConstraint(PERSONA_ASISTENCIA_VIERNES_B, ASISTENCIA_VIERNES) not null,
@@ -79,7 +91,6 @@ create table QName(DATA, PERSONA_RELACIONADA) (
 	NOMBRE                            nvarchar(255)    default EmptyString      not null,
 	APELLIDO                          nvarchar(255)    default EmptyString      not null,
 	FECHA_NACIMIENTO                  date             default CurrentDate      not null,
-	TELEFONO_DE_CONTACTO              nvarchar(255)    default EmptyString      not null,
 	GRUPO_REFERENCIA                  nvarchar(255)    default EmptyString      not null,
 	ASISTENCIA_JUEVES                 boolean          default False CheckBoolConstraint(PERSONA_RELACIONADA_A_1F5D39_B, ASISTENCIA_JUEVES) not null,
 	ASISTENCIA_VIERNES                boolean          default False CheckBoolConstraint(PERSONA_RELACIONADA_A_FC2DD7_B, ASISTENCIA_VIERNES) not null,
@@ -104,6 +115,10 @@ create table QName(DATA, _METADATA) (
 create index IndexName(DATA, NIVEL_ORDEN_IDXT)
 	on QName(DATA, NIVEL) (ORDEN) IndexTableSpace;;
 
+alter table QName(DATA, BARRIO) add constraint LOCALIDAD_BARRIO_FK
+	foreign key (LOCALIDAD_ID)
+	references QName(DATA, LOCALIDAD) (ID);;
+
 alter table QName(DATA, COMUNIDAD) add constraint NIVEL_COMUNIDAD_COMUNIDAD_FK
 	foreign key (NIVEL_COMUNIDAD_ID)
 	references QName(DATA, NIVEL) (ID);;
@@ -112,9 +127,17 @@ alter table QName(DATA, COMUNIDAD) add constraint LOCALIDAD_COMUNIDAD_FK
 	foreign key (LOCALIDAD_ID)
 	references QName(DATA, LOCALIDAD) (ID);;
 
+alter table QName(DATA, COMUNIDAD) add constraint BARRIO_COMUNIDAD_FK
+	foreign key (BARRIO_ID)
+	references QName(DATA, BARRIO) (ID);;
+
 alter table QName(DATA, PERSONA) add constraint LOCALIDAD_PERSONA_FK
 	foreign key (LOCALIDAD_ID)
 	references QName(DATA, LOCALIDAD) (ID);;
+
+alter table QName(DATA, PERSONA) add constraint BARRIO_PERSONA_FK
+	foreign key (BARRIO_ID)
+	references QName(DATA, BARRIO) (ID);;
 
 alter table QName(DATA, PERSONA) add constraint NIVEL_PERSONA_FK
 	foreign key (NIVEL_ID)
@@ -129,6 +152,7 @@ alter table QName(DATA, PERSONA_RELACIONADA) add constraint PERSONA_PERSONA_RELA
 	references QName(DATA, PERSONA) (ID);;
 
 -- if NeedsSerialComment
+comment on column QName(DATA,BARRIO).ID                    is 'Serial(1,BARRIO_SEQ)';;
 comment on column QName(DATA,COMUNIDAD).ID                 is 'Serial(1,COMUNIDAD_SEQ)';;
 comment on column QName(DATA,LOCALIDAD).ID                 is 'Serial(1,LOCALIDAD_SEQ)';;
 comment on column QName(DATA,NIVEL).ID                     is 'Serial(1,NIVEL_SEQ)';;
