@@ -11,9 +11,9 @@ form NivelForm "Nivel Form" : Nivel {
     "Descripcion" : descripcion;
     "Orden"       : orden;
     footer {
-        button(save);
+        button(save), icon save;
         button(cancel);
-        button(delete), style "pull-right";
+        button(delete), icon remove, style "pull-right";
     };
 }
 
@@ -30,7 +30,7 @@ form NivelFormListing {
     };
 
     footer {
-        create "Create" :button, on_click crearNivel;
+        create "Create" :button, content_style "btn-primary", icon plus, on_click crearNivel;
         back "Back"     :button(cancel);
     };
 }

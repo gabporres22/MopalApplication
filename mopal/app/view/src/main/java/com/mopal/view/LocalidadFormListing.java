@@ -6,9 +6,7 @@ import tekgenesis.form.Action;
 import tekgenesis.form.MappingCallback;
 
 /** User class for form: LocalidadFormListing */
-public class LocalidadFormListing
-    extends LocalidadFormListingBase
-{
+public class LocalidadFormListing extends LocalidadFormListingBase {
 
     @NotNull
     @Override

@@ -9,7 +9,6 @@ import com.mopal.model.Persona;
 import com.mopal.model.g.PersonaBase;
 import org.jetbrains.annotations.NotNull;
 import tekgenesis.common.collections.ImmutableList;
-import tekgenesis.common.core.DateOnly;
 import tekgenesis.common.core.Option;
 import tekgenesis.form.Action;
 import tekgenesis.form.MappingCallback;
@@ -18,12 +17,11 @@ import tekgenesis.persistence.Criteria;
 import java.math.BigDecimal;
 
 import static com.mopal.model.g.PersonaTable.PERSONA;
+import static tekgenesis.common.core.DateOnly.current;
 import static tekgenesis.common.core.Option.option;
 
 /** User class for form: PersonaFormListing */
-public class PersonaFormListing
-    extends PersonaFormListingBase
-{
+public class PersonaFormListing extends PersonaFormListingBase {
     @Override
     public void load() {
         super.load();
@@ -92,9 +90,9 @@ public class PersonaFormListing
         @Override
         public void populate(@NotNull Persona persona) {
             super.populate(persona);
-            setEdad(DateOnly.current().yearsFrom(persona.getFechaNacimiento()));
+            setEdad(String.valueOf(current().yearsFrom(persona.getFechaNacimiento())) + " años");
             setContribucion(persona.getMontoContribucion().compareTo(BigDecimal.ZERO) > 0);
-            setLocalidad(persona.getLocalidad() + " (" + persona.getBarrio() + ")");
+            setPersonasACargo(persona.getPersonasRelacionadas().size());
 
             if(persona.getNivel().equals(getNivelNinguno()))
                 setComunidad("");

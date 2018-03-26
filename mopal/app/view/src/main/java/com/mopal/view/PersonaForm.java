@@ -4,10 +4,8 @@ import com.mopal.core.NivelHelper;
 import com.mopal.model.Barrio;
 import com.mopal.model.Comunidad;
 import com.mopal.model.Persona;
-import com.mopal.model.PersonaRelacionada;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tekgenesis.common.core.DateOnly;
 import tekgenesis.form.Action;
 import tekgenesis.form.MappingCallback;
 
@@ -66,7 +64,10 @@ public class PersonaForm extends PersonaFormBase {
     @Override
     public Action addPersonaRelacionada() {
         final PersonaRelacionadaForm form = forms.initialize(PersonaRelacionadaForm.class);
-        form.setPersona(Persona.find(getId()));
+
+        form.setPersonaResponsable(Persona.find(getId()));
+        form.loadPersonasRelacionadas();
+
         return actions().navigate(form).callback(PersonaRelacionadaFormMapping.class);
     }
 

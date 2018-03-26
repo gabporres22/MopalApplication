@@ -8,28 +8,53 @@ import com.mopal.model.Comunidad;
 import com.mopal.model.Nivel;
 
 
-form PersonaRelacionadaForm "Persona Relacionada Form" : PersonaRelacionada {
+form PersonaRelacionadaForm "Persona Relacionada Form"  {
     header {
-        message(entity), col 8;
-        search_box, col 4, style "pull-right";
+        message(title), col 12;
     };
-    "Id"                 : id, internal, optional;
-    "Persona"            : persona;
-    "Nombre"             : nombre;
-    "Apellido"           : apellido;
-    "Fecha Nacimiento"   : fechaNacimiento;
-    "Grupo Referencia"   : grupoReferencia;
-    "Asistencia Jueves"  : asistenciaJueves;
-    "Asistencia Viernes" : asistenciaViernes;
-    "Asistencia Sabado"  : asistenciaSabado;
-    "Observaciones"      : observaciones;
+
+    mainDiv: vertical, col 12 {
+        cargaPersona "": vertical, col 6 {
+            personaResponsable "Responsable"    : Persona, display, content_style "font-weight: bold;", label_col 4;
+            id                                  : Int, internal, optional;
+            nombre "Nombre"                     : String, required, label_col 4;
+            apellido "Apellido"                 : String, required, label_col 4;
+            fechaNacimiento "Fecha Nacimiento"  : Date, required, on_ui_change updateEdad, label_col 4;
+            edadValue "Edad"                    : String, display, label_col 4;
+            grupoReferencia "Grupo Referencia"  : String, required, label_col 4;
+
+            "Asistencias": horizontal, col 12 {
+                asistenciaJueves    : Boolean, no_label, placeholder "Jueves";
+                asistenciaViernes   : Boolean, no_label, placeholder "Viernes";
+                asistenciaSabado    : Boolean, no_label, placeholder "Sabado";
+            };
+
+            observaciones "Observaciones"       : String, text_area, optional, label_col 4;
+        };
+
+        "Personas a cargo asignadas": vertical, col 6 {
+            personasAsignadas: table, sortable {
+                idPersonaRelacionada    : Int, internal, optional;
+                nombrePersona           : String, display;
+                apellidoPersona         : String, display;
+                edad "Edad"             : String, display;
+                grupoReferenciaPersona  : String, display;
+                colAsistenciaJueves "J" : Boolean, display;
+                colAsistenciaViernes "V": Boolean, display;
+                colAsistenciaSabado "S" : Boolean, display;
+                rowActions ""           : dropdown, icon cog, style "open-left"{
+                    editarPersona "Editar"  : label, on_click editarPersona, icon pencil_square_o;
+                    quitarPersona "Borrar"  : label, on_click quitarPersona, icon remove;
+                };
+            };
+        };
+    };
+
     footer {
-        button(save);
+        saveButton "Guardar": button, content_style "btn-primary", icon save, on_click saveData;
         button(cancel);
-        button(delete), style "pull-right";
     };
 }
-
 
 form PersonaForm "Persona Form" : Persona {
     header {
@@ -37,7 +62,7 @@ form PersonaForm "Persona Form" : Persona {
         search_box, col 4, style "pull-right";
     };
 
-    nivelNinguno    : Nivel, internal;
+    nivelNinguno        : Nivel, internal;
 
     "": vertical, col 6 {
         "Id"                   : id, internal, optional;
@@ -69,10 +94,10 @@ form PersonaForm "Persona Form" : Persona {
     };
 
     footer, col 12 {
-        button(save);
+        button(save), icon save;
         button(cancel);
-        addPersonasRelacionadas "Agregar personas a cargo"  : button, on_click addPersonaRelacionada, hide when id == null;
-        button(delete), style "pull-right";
+        addPersonasRelacionadas "Personas a cargo"  : button, on_click addPersonaRelacionada, content_style "btn-warning", icon user, hide when id == null;
+        button(delete), icon remove, style "pull-right";
     };
 }
 
@@ -101,21 +126,44 @@ form PersonaFormListing {
         id        "Id"              : id, internal;
         nombre    "Nombre"          : nombre, display;
         apellido  "Apellido"        : apellido, display;
-        localidad "Localidad"       : String, display;
-        edad      "Edad"            : Int, display;
+        edad      "Edad"            : String, display;
         nivel     "Nivel"           : nivel, display;
         comunidad "Comunidad"       : String, display;
         asistenciaJueves "J"        : asistenciaJueves, display;
         asistenciaViernes "V"       : asistenciaViernes, display;
         asistenciaSabado "S"        : asistenciaSabado, display;
-        hijos     "Hijos"           : cantidadHijos, display;
         telefono  "Telefono"        : telefonoDeContacto, display;
         contribucion "Contribuyo"   : Boolean, display;
+        personasACargo "Personas a cargo": Int, display;
         editarPersona "Editar" : label, on_click editarPersona, icon pencil_square_o;
     };
 
     footer {
-        create "Create" :button, on_click addPersona;
+        create "Create" :button, content_style "btn-primary", icon plus, on_click addPersona;
         back "Back"     :button(cancel);
     };
+}
+
+form PersonaAsistenciaRapidaForm : Persona{
+    header {
+        message(title), col 12;
+    };
+
+    buscarPersonaSearchBox "Buscar persona": search_box;
+
+    descripcion: message(title), disable, hide when id == null, col 12;
+
+    "Asistencias": horizontal, col 12 {
+        id                     : id, internal, optional;
+        colAsistenciaJueves    : asistenciaJueves, no_label, placeholder "Jueves";
+        colAsistenciaViernes   : asistenciaViernes, no_label, placeholder "Viernes";
+        colAsistenciaSabado    : asistenciaSabado, no_label, placeholder "Sabado";
+    };
+
+    "Acciones": horizontal, col 6 {
+        button(save), icon save, disable when id == null;
+        button(cancel);
+        editarPersona "Editar": button, content_style "btn-warning", icon pencil_square_o, on_click editarPersona, disable when id == null;
+    };
+
 }

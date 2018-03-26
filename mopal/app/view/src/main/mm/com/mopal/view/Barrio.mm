@@ -11,8 +11,8 @@ form BarrioForm "Barrio Form" : com.mopal.model.Barrio {
     "Localidad"   : localidad, disable when disableLocalidad;
     "Descripcion" : descripcion;
     footer {
-        button(save);
+        button(save), icon save;
         button(cancel);
-        button(delete), style "pull-right";
+        button(delete), icon remove, style "pull-right";
     };
 }

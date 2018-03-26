@@ -9,5 +9,5 @@ entity PersonaRelacionada described_by nombre, apellido searchable {
     asistenciaJueves:       Boolean;
     asistenciaViernes:      Boolean;
     asistenciaSabado:       Boolean;
-    observaciones:          String;
+    observaciones:          String, optional;
 }
