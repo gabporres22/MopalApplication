@@ -17,6 +17,7 @@ form AsistenteJornadaPentecostesForm : AsistenteJornadaPentecostes {
     "Monto Contribucion"    : montoContribucion, mask decimal;
     "Observaciones"         : observaciones, optional;
     hidePersonasReleacionadas "": Boolean, internal, default true;
+    forCreation           : Boolean, internal, default false;
 
     footer, col 12 {
         button(save);

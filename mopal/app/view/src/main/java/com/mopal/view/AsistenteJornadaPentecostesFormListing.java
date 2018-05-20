@@ -17,6 +17,7 @@ import java.util.Comparator;
 
 import static com.mopal.core.NivelHelper.getNivelNinguno;
 import static com.mopal.model.TipoEvento.JORNADA_PENTECOSTES;
+import static com.mopal.model.g.AsistenteJornadaPentecostesBase.find;
 import static com.mopal.model.g.AsistenteJornadaPentecostesBase.listWhere;
 import static com.mopal.model.g.AsistenteJornadaPentecostesTable.ASISTENTE_JORNADA_PENTECOSTES;
 import static com.mopal.model.g.AsistenteTable.ASISTENTE;
@@ -32,6 +33,12 @@ public class AsistenteJornadaPentecostesFormListing extends AsistenteJornadaPent
 
     private Evento getEvento() {
         return evento;
+    }
+
+    public void buscar(final Integer idEvento, final Integer idAsistente) {
+        getAsistentesJornadaPentecostes().clear();
+        getAsistentesJornadaPentecostes().add().populate(find(idEvento, idAsistente));
+        setTotalRows("");
     }
 
     /** Invoked when button(buscar) is clicked */
@@ -79,6 +86,7 @@ public class AsistenteJornadaPentecostesFormListing extends AsistenteJornadaPent
     public Action addAsistencia() {
         final AsistenteJornadaPentecostesForm form = forms.initialize(AsistenteJornadaPentecostesForm.class);
         form.setEvento(getEvento());
+        form.setForCreation(true);
         return actions().navigate(form).callback(AsistenciaFormMapping.class);
     }
 
@@ -110,7 +118,7 @@ public class AsistenteJornadaPentecostesFormListing extends AsistenteJornadaPent
         @Override
         public Action editarAsistencia() {
             final AsistentesJornadaPentecostesRow current = getAsistentesJornadaPentecostes().getCurrent();
-            final AsistenteJornadaPentecostes asistenteJornadaPentecostes = AsistenteJornadaPentecostesBase.find(getEvento().getId(), current.getIdPersona());
+            final AsistenteJornadaPentecostes asistenteJornadaPentecostes = find(getEvento().getId(), current.getIdPersona());
             return actions().navigate(AsistenteJornadaPentecostesForm.class, asistenteJornadaPentecostes.keyAsString()).callback(AsistenciaFormMapping.class);
         }
     }
@@ -140,7 +148,11 @@ public class AsistenteJornadaPentecostesFormListing extends AsistenteJornadaPent
 
         @Override
         public void onSave(@NotNull AsistenteJornadaPentecostesForm base, @NotNull AsistenteJornadaPentecostesFormListing out) {
-            search(out);
+            if(base.isForCreation()) {
+                out.buscar(base.getEvento().getId(), base.getPersona().getId());
+            } else {
+                search(out);
+            }
         }
 
         private void search(final AsistenteJornadaPentecostesFormListing out) {
