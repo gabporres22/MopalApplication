@@ -101,6 +101,6 @@ form PersonaRelacionadaAsambleaForm {
 
     footer {
         saveButton "Guardar": button, content_style "btn-primary", icon save, on_click saveData;
-        button(cancel);
+        backButton "Volver" : button(cancel);
     };
 }
