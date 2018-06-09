@@ -35,6 +35,12 @@ public class AsistenteJornadaPentecostesFormListing extends AsistenteJornadaPent
         return evento;
     }
 
+    @Override
+    public void load() {
+        super.load();
+        setDescripcionEvento(getEvento().getDescripcion());
+    }
+
     public void buscar(final Integer idEvento, final Integer idAsistente) {
         getAsistentesJornadaPentecostes().clear();
         getAsistentesJornadaPentecostes().add().populate(find(idEvento, idAsistente));

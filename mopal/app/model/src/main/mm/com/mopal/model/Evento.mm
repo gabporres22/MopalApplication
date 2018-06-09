@@ -20,12 +20,37 @@ entity Evento described_by descripcion searchable by {descripcion} {
     activo          : Boolean;
 }
 
+entity AsistenteAsamblea primary_key evento, persona {
+    evento              : Evento;
+    persona             : Asistente;
+    observaciones       : String, optional;
+    personasRelacionadas: PRAsamblea*;
+}
+
+entity PRAsamblea{
+    personaRelacionada  : AsistenteAsamblea;
+    nombre              : String;
+    apellido            : String;
+    fechaNacimiento     : Date;
+    grupoReferencia     : String;
+    observaciones       : String, optional;
+}
+
 entity AsistenteJornadaPentecostes primary_key evento, persona {
     evento              : Evento;
     persona             : Asistente;
-    montoContribucion   : Decimal(10, 2);
+    montoContribucion   : Decimal(10, 2), default 0;
     observaciones       : String, optional;
     personasRelacionadas: PRJornadaPentecostes*;
+}
+
+entity PRJornadaPentecostes{
+    personaRelacionada  : AsistenteJornadaPentecostes;
+    nombre              : String;
+    apellido            : String;
+    fechaNacimiento     : Date;
+    grupoReferencia     : String;
+    observaciones       : String, optional;
 }
 
 entity AsistenteRetiroPascua primary_key evento, persona {
@@ -36,18 +61,9 @@ entity AsistenteRetiroPascua primary_key evento, persona {
     asistenciaJueves    : Boolean;
     asistenciaViernes   : Boolean;
     asistenciaSabado    : Boolean;
-    montoContribucion   : Decimal(10, 2);
+    montoContribucion   : Decimal(10, 2), default 0;
     observaciones       : String, optional;
     personasRelacionadas: PRRetiroPascua*;
-}
-
-entity PRJornadaPentecostes{
-    personaRelacionada  : AsistenteJornadaPentecostes;
-    nombre              : String;
-    apellido            : String;
-    fechaNacimiento     : Date;
-    grupoReferencia     : String;
-    observaciones       : String, optional;
 }
 
 entity PRRetiroPascua {

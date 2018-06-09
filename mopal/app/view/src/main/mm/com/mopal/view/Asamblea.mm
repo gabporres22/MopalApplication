@@ -1,13 +1,12 @@
 package com.mopal.view;
 
-import com.mopal.model.AsistenteJornadaPentecostes;
-import com.mopal.model.Asistente;
-import com.mopal.model.Nivel;
+import com.mopal.model.AsistenteAsamblea;
 import com.mopal.model.Localidad;
+import com.mopal.model.Nivel;
 import com.mopal.model.Comunidad;
-import com.mopal.model.Evento;
+import com.mopal.model.Asistente;
 
-form AsistenteJornadaPentecostesForm : AsistenteJornadaPentecostes {
+form AsistenteAsambleaForm : AsistenteAsamblea {
     header {
         message(entity), col 12;
     };
@@ -16,7 +15,6 @@ form AsistenteJornadaPentecostesForm : AsistenteJornadaPentecostes {
 
     "Evento"                : evento, display;
     "Persona"               : persona, on_new_form AsistenteForm;
-    "Monto Contribucion"    : montoContribucion, mask decimal, default 0;
     "Observaciones"         : observaciones, optional;
     hidePersonasReleacionadas "": Boolean, internal, default true;
     forCreation           : Boolean, internal, default false;
@@ -29,7 +27,7 @@ form AsistenteJornadaPentecostesForm : AsistenteJornadaPentecostes {
     };
 }
 
-form AsistenteJornadaPentecostesFormListing {
+form AsistenteAsambleaFormListing {
     header {
         message(title), col 12;
         descripcionEvento: String, display;
@@ -48,8 +46,7 @@ form AsistenteJornadaPentecostesFormListing {
         resetear "Resetear" : button, icon eraser, on_click resetearFiltros;
     };
 
-    asistentesJornadaPentecostes : AsistenteJornadaPentecostes, table(10), on_load loadAsistentes, sortable {
-        montoContribucion                   : montoContribucion, internal;
+    asistentesAsamblea : AsistenteAsamblea, table(10), on_load loadAsistentes, sortable {
         idEvento                            : Int, internal;
         idPersona                           : Int, internal;
         nombre    "Nombre"                  : String, display;
@@ -58,7 +55,6 @@ form AsistenteJornadaPentecostesFormListing {
         nivel     "Nivel"                   : Nivel, display;
         comunidad "Comunidad"               : Comunidad, display;
         telefono  "Telefono"                : String, display;
-        contribucion "Contribuyo"           : Boolean, display;
         personasACargo "Personas a cargo"   : Int, display;
         editarPersona "Persona"             : label, on_click editarPersona, label_expression "Editar", icon pencil_square_o;
         editarAsistencia "Asistencia"       : label, on_click editarAsistencia, label_expression "Editar", icon pencil_square_o;
@@ -72,7 +68,7 @@ form AsistenteJornadaPentecostesFormListing {
     };
 }
 
-form PersonaRelacionadaJornadaPentecostesForm {
+form PersonaRelacionadaAsambleaForm {
     header {
         message(title), col 12;
     };

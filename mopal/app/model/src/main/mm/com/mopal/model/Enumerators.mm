@@ -15,4 +15,5 @@ enum EstadoCivil{
 enum TipoEvento{
     JORNADA_PENTECOSTES;
     RETIRO_DE_PASCUA;
+    ASAMBLEA;
 }

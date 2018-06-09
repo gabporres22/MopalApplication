@@ -17,6 +17,11 @@ import static tekgenesis.common.core.Option.option;
 
 /** User class for form: AsistenteFormListing */
 public class AsistenteFormListing extends AsistenteFormListingBase {
+    @Override
+    public void load() {
+
+    }
+
     @Override @NotNull public Action buscar() {
         getAsistentes().clear();
 

@@ -1,9 +1,11 @@
 package com.mopal.view;
 
 import com.mopal.model.Evento;
+import com.mopal.model.TipoEvento;
 import org.jetbrains.annotations.NotNull;
 import tekgenesis.form.Action;
 
+import static com.mopal.model.TipoEvento.ASAMBLEA;
 import static com.mopal.model.TipoEvento.JORNADA_PENTECOSTES;
 import static com.mopal.model.TipoEvento.RETIRO_DE_PASCUA;
 import static com.mopal.model.g.EventoBase.findWhere;
@@ -25,6 +27,10 @@ public class AbstractABMForm extends AbstractABMFormBase {
                 final AsistenteRetiroPascuaForm retiroPascuaForm = forms.initialize(AsistenteRetiroPascuaForm.class);
                 retiroPascuaForm.setEvento(evento);
                 return actions().navigate(retiroPascuaForm);
+            } else if (evento.getTipoEvento().equals(ASAMBLEA)) {
+                final AsistenteAsambleaForm asambleaForm = forms.initialize(AsistenteAsambleaForm.class);
+                asambleaForm.setEvento(evento);
+                return actions().navigate(asambleaForm);
             }
         }
 

@@ -1,3 +1,5 @@
+-- @Generated at 2018-06-09 08:36:44
+
 -- SQL for Schema DATA --
 
 -- if NeedsCreateSequence

@@ -44,10 +44,12 @@ form AsistenteForm "Asistente Form" : Asistente {
     };
 }
 
-form AsistenteFormListing {
+form AsistenteFormListing on_load load{
     header {
         message(title), col 12;
     };
+
+    descripcionEvento "Evento": String;
 
     filtros "Filtros": vertical, collapsible {
         nombreFiltro    : String, hint "Nombre", optional, col 2;
