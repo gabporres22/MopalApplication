@@ -49,8 +49,6 @@ form AsistenteFormListing on_load load{
         message(title), col 12;
     };
 
-    descripcionEvento "Evento": String;
-
     filtros "Filtros": vertical, collapsible {
         nombreFiltro    : String, hint "Nombre", optional, col 2;
         apellidoFiltro  : String, hint "Apellido", optional, col 2;
