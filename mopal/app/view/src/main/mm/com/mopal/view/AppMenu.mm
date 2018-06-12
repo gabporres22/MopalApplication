@@ -5,6 +5,7 @@ menu MopalMenu {
     NivelFormListing;
 	ComunidadFormListing;
     EventoForm;
+    EventoListing;
     AsistenteFormListing;
 	AbstractABMForm;
 	AbstractListingForm;
