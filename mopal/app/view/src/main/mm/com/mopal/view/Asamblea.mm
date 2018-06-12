@@ -63,8 +63,9 @@ form AsistenteAsambleaFormListing {
     totalRows "Registros": String, display;
 
     footer {
-        create "Create" : button, content_style "btn-primary", icon plus, on_click addAsistencia;
-        back "Back"     : button(cancel);
+        exportar "Descargar": button(export), export_type csv;
+        create "Create"     : button, content_style "btn-primary", icon plus, on_click addAsistencia;
+        back "Back"         : button(cancel);
     };
 }
 

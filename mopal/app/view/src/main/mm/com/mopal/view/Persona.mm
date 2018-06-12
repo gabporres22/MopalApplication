@@ -58,6 +58,7 @@ form AsistenteFormListing on_load load{
     };
 
     horizontal, col 12{
+        exportar "Descargar": button(export), export_type csv;
         buscar   "Buscar"   : button, icon search, on_click buscar, shortcut "ctrl+b";
         resetear "Resetear" : button, icon eraser, on_click resetearFiltros;
     };
