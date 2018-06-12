@@ -58,7 +58,6 @@ form AsistenteFormListing on_load load{
     };
 
     horizontal, col 12{
-        exportar "Descargar": button(export), export_type csv;
         buscar   "Buscar"   : button, icon search, on_click buscar, shortcut "ctrl+b";
         resetear "Resetear" : button, icon eraser, on_click resetearFiltros;
     };
@@ -82,6 +81,7 @@ form AsistenteFormListing on_load load{
     totalRows "Registros": String, display;
 
     footer {
+        exportar "Descargar": button(export), export_type csv;
         create "Create" : button, content_style "btn-primary", icon plus, on_click addAsistente;
         back "Back"     : button(cancel);
     };
