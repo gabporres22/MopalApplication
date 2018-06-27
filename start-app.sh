@@ -4,9 +4,9 @@ uso() {
     echo "Uso:"
     echo "start-app -d [DEPLOY] -p [PROP]"
     echo "  d: Carpeta de instalacion"
-    echo "  p: Nombre del properties (ejemplo: ibottero.properties)"
+    echo "  p: Nombre del properties (ejemplo: app.properties)"
     echo ""
-    echo "Ejemplo de uso: startApp -d /tmp/deploy -p ibottero.properties"
+    echo "Ejemplo de uso: startApp -d /tmp/deploy -p app.properties"
     exit 1
 }
 
