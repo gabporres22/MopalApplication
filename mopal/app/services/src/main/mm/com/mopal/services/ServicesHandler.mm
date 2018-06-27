@@ -1,7 +1,7 @@
 package com.mopal.services;
 
-import com.mopal.model.Persona;
+import com.mopal.model.Asistente;
 
-handler PersonaService on_route "/api/persona" {
-    "/all" : Persona*, list;
+handler AsistenteService on_route "/api/asistente" {
+    "/all" : Asistente*, list;
 }

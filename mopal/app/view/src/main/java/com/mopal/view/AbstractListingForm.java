@@ -21,8 +21,8 @@ public class AbstractListingForm extends AbstractListingFormBase {
         if(evento != null){
             if(evento.getTipoEvento().equals(JORNADA_PENTECOSTES)){
                 return actions().navigate(AsistenteJornadaPentecostesFormListing.class);
-            } else if (evento.getTipoEvento().equals(RETIRO_DE_PASCUA)) {
-                return actions().navigate(PersonaFormListing.class);
+//            } else if (evento.getTipoEvento().equals(RETIRO_DE_PASCUA)) {
+//                return actions().navigate(PersonaFormListing.class);
             } else if (evento.getTipoEvento().equals(ASAMBLEA)) {
                 return actions().navigate(AsistenteAsambleaFormListing.class);
             }
