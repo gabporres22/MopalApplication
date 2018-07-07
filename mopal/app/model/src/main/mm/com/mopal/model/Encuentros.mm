@@ -1,14 +1,14 @@
 package com.mopal.model  schema data;
 
-entity Encuentro {
+entity Encuentro described_by fechaEncuentro, comunidad searchable by {id} auditable deprecable {
 	comunidad		: Comunidad;
-	fechaEncuentro	: DateTime;
-	observaciones	: String;
+	fechaEncuentro	: Date;
+	observaciones	: String, optional;
 }
 
-entity DetalleAsistenciaEncuentro {
+entity DetalleAsistenciaEncuentro auditable deprecable described_by encuentro, persona{
 	encuentro       : Encuentro;
 	persona		    : Asistente;
 	presente	    : Boolean, default false;
-	observaciones   : String;
+	observaciones   : String, optional;
 }
