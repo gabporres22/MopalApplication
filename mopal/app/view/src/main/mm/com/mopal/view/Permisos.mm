@@ -29,7 +29,7 @@ form AsignacionComunidadPastorListingForm "" {
 
     asignacion : ComunidadPastor, table(10), on_load loadComunidadPastor, sortable {
         id          : id, internal, optional ;
-        nivel       : Nivel, display;
+        nivel "Niv" : Nivel, display;
         comunidad   : comunidad, display;
         pastor      : pastor, display;
         btnEditar "btn"  : button, on_click navigateToAsignacionComunidadPastorForm;

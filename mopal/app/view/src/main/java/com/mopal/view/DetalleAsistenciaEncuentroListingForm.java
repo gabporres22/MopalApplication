@@ -48,12 +48,6 @@ public class DetalleAsistenciaEncuentroListingForm extends DetalleAsistenciaEncu
     }
 
     public class AsistentesRow extends AsistentesRowBase {
-        @NotNull
-        @Override
-        public Action navigateToDetalleAsistenciaEncuentro() {
-            return actions().navigate(DetalleAsistenciaEncuentroForm.class, String.valueOf(getId()));
-        }
-
         @Override
         public void populate(@NotNull DetalleAsistenciaEncuentro detalleAsistenciaEncuentro) {
             super.populate(detalleAsistenciaEncuentro);

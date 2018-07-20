@@ -8,8 +8,7 @@ import com.mopal.model.ComunidadPastor;
 
 form EncuentroForm "Encuentro Form" : Encuentro {
     header {
-        message(entity), col 8;
-        search_box, col 4, style "pull-right";
+        message(entity), col 12;
     };
 
     "Id"              : id, internal, optional;
@@ -30,13 +29,25 @@ form EncuentroListingForm "" {
         message(title), col 12;
     };
 
-    encuentros: Encuentro, table(10), sortable {
+    filtros "Filtros": vertical, collapsible {
+        nivelFiltro         : Nivel, combo_box, hint "Nivel", optional, col 2;
+        comunidadFiltro     : Comunidad, combo_box, hint "Comunidad", filter (nivelComunidad = nivelFiltro), disable when nivelFiltro == null, optional, col 2;
+        fechaDesdeFiltro    : Date, optional, col 2;
+        fechaHastaFiltro    : Date, optional, col 2;
+    };
+
+    horizontal, col 12{
+        buscar   "Buscar"   : button, icon search, on_click buscar, shortcut "ctrl+b";
+        resetear "Resetear" : button, icon eraser, on_click resetearFiltros;
+    };
+
+    encuentros: Encuentro, table(10), on_change saveEncuentro, sortable {
         id               : id, internal;
-        nivel "Nivel"    : Nivel, display;
-        comunidad ""     : comunidad, display;
-        fecha ""         : fechaEncuentro, display;
-        observaciones  "": observaciones, display;
-        btnEditar      "btn": button, on_click navigateToEncuentroForm;
+        nivel "Nivel"    : Nivel, display, width 15;
+        comunidad ""     : comunidad, display, width 15;
+        fecha ""         : fechaEncuentro, display, width 10;
+        asistencias "A"  : String, display, width 10;
+        observaciones "" : observaciones, optional, width 50;
         btnAsistencias "btn": button, on_click navigateToDetalleAsistencias;
     };
 
@@ -77,13 +88,12 @@ form DetalleAsistenciaEncuentroListingForm "Detalle Asistencia Encuentro Listing
     };
 
     vertical {
-        asistentes  : DetalleAsistenciaEncuentro, table(10), on_change saveAsistencia, sortable {
+        asistentes  : DetalleAsistenciaEncuentro, table, on_change saveAsistencia, sortable {
             id                          : id, internal;
-            nombre      "Nombre"        : String, display;
-            apellido    "Apellido"      : String, display;
-            presente    "Asistió"       : Boolean;
-            observacion "Observaciones" : String, optional;
-            btnEditar   "btn"           : button, on_click navigateToDetalleAsistenciaEncuentro;
+            nombre      "Nombre"        : String, display, width 20;
+            apellido    "Apellido"      : String, display, width 20;
+            presente    "Asistió"       : Boolean, width 10;
+            observacion "Observaciones" : String, optional, width 50;
         };
     };
 
