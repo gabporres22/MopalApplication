@@ -40,16 +40,23 @@ public class AsistenteJornadaMariaForm extends AsistenteJornadaMariaFormBase {
             final AsistenteJornadaMaria asistenteJornadaMariaEsposo = AsistenteJornadaMaria.create(getEvento().getId(), getPersonaMatrimonio().getId());
             asistenteJornadaMariaEsposo.setObservaciones(getObservaciones());
             asistenteJornadaMariaEsposo.setMontoContribucion(BigDecimal.valueOf(montoContribucion));
-            asistenteJornadaMariaEsposo.insert();
+
+            final AsistenteJornadaMaria asistenteJornadaMariaEsposoDB = asistenteJornadaMariaEsposo.insert();
+            asociarPersonasACargo(asistenteJornadaMariaEsposoDB);
         }
 
-        final AsistenteJornadaMaria asistenteJornadaMariaNew = asistenteJornadaMaria.insert();
+        final AsistenteJornadaMaria asistenteJornadaMariaDB = asistenteJornadaMaria.insert();
+        asociarPersonasACargo(asistenteJornadaMariaDB);
 
+        return actions().getDefault();
+    }
+
+    private void asociarPersonasACargo(final AsistenteJornadaMaria asistenteJornadaMaria) {
         if(getPersonasAsignadas().size() > 0) {
             getPersonasAsignadas().forEach(item -> {
                 final PRJornadaMaria personaRelacionadaJornadaMaria = PRJornadaMaria.create();
 
-                personaRelacionadaJornadaMaria.setPersonaRelacionada(asistenteJornadaMariaNew);
+                personaRelacionadaJornadaMaria.setPersonaRelacionada(asistenteJornadaMaria);
                 personaRelacionadaJornadaMaria.setNombre(item.getNombre());
                 personaRelacionadaJornadaMaria.setApellido(item.getApellido());
                 personaRelacionadaJornadaMaria.setFechaNacimiento(item.getFechaNacimiento());
@@ -59,8 +66,6 @@ public class AsistenteJornadaMariaForm extends AsistenteJornadaMariaFormBase {
                 personaRelacionadaJornadaMaria.insert();
             });
         }
-
-        return actions().getDefault();
     }
 
     @NotNull
@@ -71,7 +76,18 @@ public class AsistenteJornadaMariaForm extends AsistenteJornadaMariaFormBase {
 
     /** Invoked to find an entity instance */
     @Override @NotNull public AsistenteJornadaMaria find() {
-        throw new IllegalStateException("To be implemented");
+        final AsistenteJornadaMaria asistenteJornadaMaria = super.find();
+        asistenteJornadaMaria.getPersonasRelacionadas().forEach(personaAsignada -> {
+            final PersonasAsignadasRow personasAsignadasRow = getPersonasAsignadas().add();
+
+            personasAsignadasRow.setNombre(personaAsignada.getNombre());
+            personasAsignadasRow.setApellido(personaAsignada.getApellido());
+            personasAsignadasRow.setFechaNacimiento(personaAsignada.getFechaNacimiento());
+            personasAsignadasRow.setGrupoReferencia(personaAsignada.getGrupoReferencia());
+            personasAsignadasRow.setObservacionesPersona(personaAsignada.getObservaciones());
+        });
+
+        return asistenteJornadaMaria;
     }
 
     @NotNull

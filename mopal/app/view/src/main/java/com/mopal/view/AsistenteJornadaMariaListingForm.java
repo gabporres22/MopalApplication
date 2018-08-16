@@ -9,6 +9,8 @@ import tekgenesis.form.Action;
 import tekgenesis.form.MappingCallback;
 import tekgenesis.persistence.Criteria;
 
+import java.math.BigDecimal;
+
 import static com.mopal.core.NivelHelper.getNivelNinguno;
 import static com.mopal.model.TipoEvento.JORNADA_MARIA;
 import static com.mopal.model.g.AsistenteJornadaMariaBase.listWhere;
@@ -16,6 +18,7 @@ import static com.mopal.model.g.AsistenteJornadaMariaTable.ASISTENTE_JORNADA_MAR
 import static com.mopal.model.g.AsistenteTable.ASISTENTE;
 import static com.mopal.model.g.EventoBase.findWhere;
 import static com.mopal.model.g.EventoTable.EVENTO;
+import static tekgenesis.common.core.DateOnly.current;
 import static tekgenesis.common.core.Option.option;
 
 /** User class for form: AsistenteJornadaMariaListingForm */
@@ -99,6 +102,16 @@ public class AsistenteJornadaMariaListingForm extends AsistenteJornadaMariaListi
         @Override
         public void populate(@NotNull AsistenteJornadaMaria asistenteJornadaMaria) {
             super.populate(asistenteJornadaMaria);
+            setIdEvento(asistenteJornadaMaria.getEvento().getId());
+            setIdPersona(asistenteJornadaMaria.getPersona().getId());
+            setNombre(asistenteJornadaMaria.getPersona().getNombre());
+            setApellido(asistenteJornadaMaria.getPersona().getApellido());
+            setEdad(String.valueOf(current().yearsFrom(asistenteJornadaMaria.getPersona().getFechaNacimiento())) + " años");
+            setNivel(asistenteJornadaMaria.getPersona().getNivel());
+            setComunidad(asistenteJornadaMaria.getPersona().getComunidad());
+            setTelefono(asistenteJornadaMaria.getPersona().getTelefonoDeContacto());
+            setContribucion(asistenteJornadaMaria.getMontoContribucion().compareTo(BigDecimal.ZERO) > 0);
+            setPersonasACargo(asistenteJornadaMaria.getPersonasRelacionadas().size());
         }
 
         @NotNull
@@ -113,7 +126,9 @@ public class AsistenteJornadaMariaListingForm extends AsistenteJornadaMariaListi
         public Action editarAsistencia() {
             final AsistentesJornadaMariaRow current = getAsistentesJornadaMaria().getCurrent();
             final AsistenteJornadaMaria asistenteJornadaMaria = AsistenteJornadaMaria.find(getEvento().getId(), current.getIdPersona());
-            return actions().navigate(AsistenteJornadaMariaForm.class, asistenteJornadaMaria.keyAsString()).callback(AsistenciaFormMapping.class);
+            final AsistenteJornadaMariaForm form = forms.initialize(AsistenteJornadaMariaForm.class, asistenteJornadaMaria.keyAsString());
+            form.setForUpdate(true);
+            return actions().navigate(form).callback(AsistenciaFormMapping.class);
         }
     }
 

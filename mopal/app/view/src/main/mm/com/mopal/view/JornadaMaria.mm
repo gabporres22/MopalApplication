@@ -6,18 +6,19 @@ import com.mopal.model.Localidad;
 import com.mopal.model.Nivel;
 import com.mopal.model.Comunidad;
 
-form AsistenteJornadaMariaForm : AsistenteJornadaMaria {
+form AsistenteJornadaMariaForm : AsistenteJornadaMaria{
     header {
         message(entity), col 12;
     };
 
     forCreation: Boolean, internal, default false;
+    forUpdate: Boolean, internal, default false;
 
     vertical, col 5 {
         "Evento"                        : evento, display, label_col 4;
         "Persona"                       : persona, on_new_form AsistenteForm, on_change validarAsistenciaPersona, required, label_col 4;
-        personaMatrimonio "Esposa/o"    : Asistente, on_new_form AsistenteForm, on_change validarAsistenciaEsposo, optional, label_col 4;
-        montoSugerido  "Monto a Pagar"  : Decimal(10, 2), display, mask currency, label_col 4;
+        personaMatrimonio "Esposa/o"    : Asistente, on_new_form AsistenteForm, on_change validarAsistenciaEsposo, hide when forUpdate, optional, label_col 4;
+        montoSugerido  "Monto a Pagar"  : Decimal(10, 2), display, mask currency, hide when forUpdate, label_col 4;
         "Monto Contribucion"            : montoContribucion, mask currency, default 0, check montoContribucion >= 0 : "El monto debe ser mayor o igual a 0", label_col 4;
         "Observaciones"                 : observaciones, optional, label_col 4;
     };
