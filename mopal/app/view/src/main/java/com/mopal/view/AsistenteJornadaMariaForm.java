@@ -38,7 +38,7 @@ public class AsistenteJornadaMariaForm extends AsistenteJornadaMariaFormBase {
             asistenteJornadaMaria.setMontoContribucion(BigDecimal.valueOf(montoContribucion));
 
             final AsistenteJornadaMaria asistenteJornadaMariaEsposo = AsistenteJornadaMaria.create(getEvento().getId(), getPersonaMatrimonio().getId());
-            asistenteJornadaMariaEsposo.setObservaciones(getObservaciones());
+            asistenteJornadaMariaEsposo.setObservaciones(getObservaciones().trim() + " Registrado/a por: " + getPersona().getNombre() + " " + getPersona().getApellido());
             asistenteJornadaMariaEsposo.setMontoContribucion(BigDecimal.valueOf(montoContribucion));
 
             final AsistenteJornadaMaria asistenteJornadaMariaEsposoDB = asistenteJornadaMariaEsposo.insert();
