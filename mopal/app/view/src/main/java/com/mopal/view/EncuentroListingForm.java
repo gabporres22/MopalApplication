@@ -1,6 +1,7 @@
 package com.mopal.view;
 
 import com.mopal.model.*;
+import com.mopal.model.g.ComunidadPastorBase;
 import org.jetbrains.annotations.NotNull;
 import tekgenesis.authorization.User;
 import tekgenesis.common.collections.ImmutableList;
@@ -9,11 +10,9 @@ import tekgenesis.common.core.Option;
 import tekgenesis.form.Action;
 
 import static com.mopal.model.Encuentro.listAllByUser;
-import static com.mopal.model.g.ComunidadPastorBase.list;
 import static com.mopal.model.g.ComunidadPastorTable.COMUNIDAD_PASTOR;
 import static com.mopal.model.g.DetalleAsistenciaEncuentroBase.listWhere;
 import static com.mopal.model.g.DetalleAsistenciaEncuentroTable.DETALLE_ASISTENCIA_ENCUENTRO;
-import static com.mopal.model.g.UsuarioAsistenteTable.USUARIO_ASISTENTE;
 import static com.mopal.view.DetalleAsistenciaEncuentroListingFormBase.parameters;
 import static tekgenesis.authorization.shiro.AuthorizationUtils.getCurrentUser;
 import static tekgenesis.common.core.Option.none;
@@ -25,16 +24,19 @@ public class EncuentroListingForm extends EncuentroListingFormBase {
 
     @Override
     public void load() {
+        if(currentUser.getId().equals("admin")) setUserAdmin(true);
         super.load();
         buscarEncuentros(none(), none(), none(), none());
         loadComboOptions();
     }
 
     private void loadComboOptions() {
-        final ImmutableList<ComunidadPastor> comunidades = list().join(USUARIO_ASISTENTE, COMUNIDAD_PASTOR.PASTOR_ID.eq(USUARIO_ASISTENTE.ASISTENTE_ID)).where(USUARIO_ASISTENTE.USUARIO_ID.eq(currentUser.getId())).toList();
+        if(!isUserAdmin()){
+            final ImmutableList<ComunidadPastor> comunidades = ComunidadPastorBase.listWhere(COMUNIDAD_PASTOR.PASTOR_ID.eq(currentUser.getId())).toList();
 
-        setNivelFiltroOptions(comunidades.map(comunidad -> comunidad.getComunidad().getNivelComunidad()));
-        setComunidadFiltroOptions(comunidades.map(comunidad -> comunidad.getComunidad()));
+            setNivelFiltroOptions(comunidades.map(comunidad -> comunidad.getComunidad().getNivelComunidad()));
+            setComunidadFiltroOptions(comunidades.map(comunidad -> comunidad.getComunidad()));
+        }
     }
 
     public Action buscarEncuentros(final Option<Nivel> nivel, final Option<Comunidad> comunidad, final Option<DateOnly> fechaDesde, final Option<DateOnly> fechaHasta) {
@@ -50,7 +52,11 @@ public class EncuentroListingForm extends EncuentroListingFormBase {
         if(option(getFechaDesdeFiltro()).isPresent() && option(getFechaHastaFiltro()).isPresent() && getFechaHastaFiltro().isLessThan(getFechaDesdeFiltro()))
             return actions().getError().withMessage("Las fechas de búsqueda deben tener un criterio válido.");
 
-        return buscarEncuentros(option(getNivelFiltro()), option(getComunidadFiltro()), option(getFechaDesdeFiltro()), option(getFechaHastaFiltro()));
+        if(isUserAdmin()){
+            return buscarEncuentros(option(getNivelFiltroAdmin()), option(getComunidadFiltroAdmin()), option(getFechaDesdeFiltro()), option(getFechaHastaFiltro()));
+        }else {
+            return buscarEncuentros(option(getNivelFiltro()), option(getComunidadFiltro()), option(getFechaDesdeFiltro()), option(getFechaHastaFiltro()));
+        }
     }
 
     @NotNull

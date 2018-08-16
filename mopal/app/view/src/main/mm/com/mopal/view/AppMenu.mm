@@ -30,5 +30,4 @@ menu EncuentrosMenu {
 
 menu PermisosMenu {
     AsignacionComunidadPastorListingForm;
-    AsignacionUsuarioAsistenteListingForm;
 }

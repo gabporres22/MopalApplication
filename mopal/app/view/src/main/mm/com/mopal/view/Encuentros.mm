@@ -29,11 +29,15 @@ form EncuentroListingForm "" {
         message(title), col 12;
     };
 
+    userAdmin: Boolean, internal, default false;
+
     filtros "Filtros": vertical, collapsible {
-        nivelFiltro         : Nivel, combo_box, hint "Nivel", optional, col 2;
-        comunidadFiltro     : Comunidad, combo_box, hint "Comunidad", filter (nivelComunidad = nivelFiltro), disable when nivelFiltro == null, optional, col 2;
-        fechaDesdeFiltro    : Date, optional, col 2;
-        fechaHastaFiltro    : Date, optional, col 2;
+        nivelFiltro          : Nivel, combo_box, hint "Nivel", optional, col 2, hide when userAdmin;
+        comunidadFiltro      : Comunidad, combo_box, hint "Comunidad", filter (nivelComunidad = nivelFiltro), disable when nivelFiltro == null, optional, col 2, hide when userAdmin;
+        nivelFiltroAdmin     : Nivel, hint "Nivel", optional, col 2, hide when !userAdmin;
+        comunidadFiltroAdmin : Comunidad, hint "Comunidad", filter (nivelComunidad = nivelFiltroAdmin), disable when nivelFiltroAdmin == null, optional, col 2, hide when !userAdmin;
+        fechaDesdeFiltro     : Date, optional, hint "Desde", col 2;
+        fechaHastaFiltro     : Date, optional, hint "Hasta", col 2;
     };
 
     horizontal, col 12{
