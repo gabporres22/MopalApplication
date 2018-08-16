@@ -2,6 +2,7 @@ package com.mopal.view;
 
 
 import com.mopal.model.Evento;
+import com.mopal.model.TipoEvento;
 import org.jetbrains.annotations.NotNull;
 import tekgenesis.form.Action;
 
@@ -19,12 +20,14 @@ public class AbstractListingForm extends AbstractListingFormBase {
         final Evento evento = findWhere(EVENTO.ACTIVO.eq(true));
 
         if(evento != null){
-            if(evento.getTipoEvento().equals(JORNADA_PENTECOSTES)){
+            if(evento.getTipoEvento() == JORNADA_PENTECOSTES){
                 return actions().navigate(AsistenteJornadaPentecostesFormListing.class);
 //            } else if (evento.getTipoEvento().equals(RETIRO_DE_PASCUA)) {
 //                return actions().navigate(PersonaFormListing.class);
-            } else if (evento.getTipoEvento().equals(ASAMBLEA)) {
+            } else if (evento.getTipoEvento() == ASAMBLEA) {
                 return actions().navigate(AsistenteAsambleaFormListing.class);
+            } else if (evento.getTipoEvento() == TipoEvento.JORNADA_MARIA) {
+                return actions().navigate(AsistenteJornadaMariaListingForm.class);
             }
         }
 

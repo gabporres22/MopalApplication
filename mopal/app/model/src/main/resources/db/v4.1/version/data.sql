@@ -185,7 +185,6 @@ create table QName(DATA, EVENTO) (
 	MONTO_SOLTERO                     decimal(10,2),
 	MONTO_MATRIMONIO                  decimal(10,2),
 	MONTO_NIÑO                        decimal(10,2),
-	MONTO_NIÑOS_DESCUENTO             decimal(10,2),
 	UPDATE_TIME                       datetime(3)      default CurrentTime      not null,
 
 	constraint PK_EVENTO              primary key (ID)

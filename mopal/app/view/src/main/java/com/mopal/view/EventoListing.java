@@ -29,6 +29,12 @@ public class EventoListing extends EventoListingBase {
     //~ Inner Classes ............................................................................................................
     public class EventosRow extends EventosRowBase {
 
+        @NotNull
+        @Override
+        public Action editarEvento() {
+            final int idEvento = getEventos().getCurrent().getId();
+            return actions().navigate(EventoForm.class, String.valueOf(idEvento));
+        }
     }
 
     public static class EventoCallback implements MappingCallback<EventoForm, EventoListing> {
