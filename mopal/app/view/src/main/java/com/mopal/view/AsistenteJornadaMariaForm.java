@@ -1,15 +1,22 @@
 package com.mopal.view;
 
-import com.mopal.model.EstadoCivil;
 import com.mopal.model.PRJornadaMaria;
+import com.mopal.model.g.AsistenteJornadaMariaTable;
+import tekgenesis.common.core.Option;
 import tekgenesis.form.Action;
 import com.mopal.model.AsistenteJornadaMaria;
 import org.jetbrains.annotations.NotNull;
+import tekgenesis.transaction.Transaction;
 
+import javax.transaction.TransactionManager;
 import java.math.BigDecimal;
 
+import static com.mopal.model.g.AsistenteJornadaMariaBase.findWhere;
+import static com.mopal.model.g.AsistenteJornadaMariaTable.ASISTENTE_JORNADA_MARIA;
 import static java.math.BigDecimal.ZERO;
 import static tekgenesis.common.core.DateOnly.current;
+import static tekgenesis.common.core.Option.none;
+import static tekgenesis.common.core.Option.option;
 
 /** User class for form: AsistenteJornadaMariaForm */
 public class AsistenteJornadaMariaForm extends AsistenteJornadaMariaFormBase {
@@ -17,7 +24,9 @@ public class AsistenteJornadaMariaForm extends AsistenteJornadaMariaFormBase {
 
     /** Invoked when creating a form instance */
     @Override @NotNull public Action create() {
-        final AsistenteJornadaMaria asistenteJornadaMaria = AsistenteJornadaMaria.create(getEvento().getId(), getPersona().getId());
+        final AsistenteJornadaMaria asistenteJornadaMaria = AsistenteJornadaMaria.create();
+        asistenteJornadaMaria.setEvento(getEvento());
+        asistenteJornadaMaria.setPersona(getPersona());
         asistenteJornadaMaria.setObservaciones(getObservaciones());
 
         if(getPersonaMatrimonio() == null) {
@@ -26,6 +35,9 @@ public class AsistenteJornadaMariaForm extends AsistenteJornadaMariaFormBase {
             } else {
                 asistenteJornadaMaria.setMontoContribucion(getEvento().getMontoSoltero().add(BigDecimal.valueOf(calcularMontoHijos())));
             }
+
+            asistenteJornadaMaria.insert();
+            asociarPersonasACargo(asistenteJornadaMaria, none());
         } else {
             double montoContribucion = 0;
 
@@ -37,33 +49,43 @@ public class AsistenteJornadaMariaForm extends AsistenteJornadaMariaFormBase {
 
             asistenteJornadaMaria.setMontoContribucion(BigDecimal.valueOf(montoContribucion));
 
-            final AsistenteJornadaMaria asistenteJornadaMariaEsposo = AsistenteJornadaMaria.create(getEvento().getId(), getPersonaMatrimonio().getId());
-            asistenteJornadaMariaEsposo.setObservaciones(getObservaciones().trim() + " Registrado/a por: " + getPersona().getNombre() + " " + getPersona().getApellido());
+            final AsistenteJornadaMaria asistenteJornadaMariaEsposo = AsistenteJornadaMaria.create();
+            asistenteJornadaMariaEsposo.setEvento(getEvento());
+            asistenteJornadaMariaEsposo.setPersona(getPersonaMatrimonio());
+            asistenteJornadaMariaEsposo.setObservaciones(getObservaciones() == null ? "" : getObservaciones().trim() + " Registrado/a por: " + getPersona().getNombre() + " " + getPersona().getApellido());
             asistenteJornadaMariaEsposo.setMontoContribucion(BigDecimal.valueOf(montoContribucion));
 
-            final AsistenteJornadaMaria asistenteJornadaMariaEsposoDB = asistenteJornadaMariaEsposo.insert();
-            asociarPersonasACargo(asistenteJornadaMariaEsposoDB);
+            asistenteJornadaMaria.insert();
+            asistenteJornadaMariaEsposo.insert();
+            asociarPersonasACargo(asistenteJornadaMaria, option(asistenteJornadaMariaEsposo));
         }
-
-        final AsistenteJornadaMaria asistenteJornadaMariaDB = asistenteJornadaMaria.insert();
-        asociarPersonasACargo(asistenteJornadaMariaDB);
 
         return actions().getDefault();
     }
 
-    private void asociarPersonasACargo(final AsistenteJornadaMaria asistenteJornadaMaria) {
+    private AsistenteJornadaMaria buscarAsistente(final Integer eventoId, final Integer personaId) {
+        return findWhere(ASISTENTE_JORNADA_MARIA.EVENTO_ID.eq(eventoId).and(ASISTENTE_JORNADA_MARIA.PERSONA_ID.eq(personaId)));
+    }
+
+    private void asociarPersonasACargo(final AsistenteJornadaMaria asistenteJornadaMaria, final Option<AsistenteJornadaMaria> asistenteJornadaMaria2) {
+        final AsistenteJornadaMaria asistenteJornadaMariaDB = buscarAsistente(asistenteJornadaMaria.getEventoId(), asistenteJornadaMaria.getPersonaId());
+        final AsistenteJornadaMaria asistenteJornadaMaria2DB = asistenteJornadaMaria2.isPresent() ? buscarAsistente(asistenteJornadaMaria2.get().getEventoId(), asistenteJornadaMaria2.get().getPersonaId()) : null;
+
         if(getPersonasAsignadas().size() > 0) {
             getPersonasAsignadas().forEach(item -> {
-                final PRJornadaMaria personaRelacionadaJornadaMaria = PRJornadaMaria.create();
+                Transaction.runInTransaction(f -> {
+                    final PRJornadaMaria personaRelacionadaJornadaMaria = PRJornadaMaria.create();
 
-                personaRelacionadaJornadaMaria.setPersonaRelacionada(asistenteJornadaMaria);
-                personaRelacionadaJornadaMaria.setNombre(item.getNombre());
-                personaRelacionadaJornadaMaria.setApellido(item.getApellido());
-                personaRelacionadaJornadaMaria.setFechaNacimiento(item.getFechaNacimiento());
-                personaRelacionadaJornadaMaria.setGrupoReferencia(item.getGrupoReferencia());
-                personaRelacionadaJornadaMaria.setObservaciones(item.getObservacionesPersona());
+                    personaRelacionadaJornadaMaria.setPersonaRelacionada(asistenteJornadaMariaDB);
+                    personaRelacionadaJornadaMaria.setPersonaRelacionada2(asistenteJornadaMaria2DB);
+                    personaRelacionadaJornadaMaria.setNombre(item.getNombre());
+                    personaRelacionadaJornadaMaria.setApellido(item.getApellido());
+                    personaRelacionadaJornadaMaria.setFechaNacimiento(item.getFechaNacimiento());
+                    personaRelacionadaJornadaMaria.setGrupoReferencia(item.getGrupoReferencia());
+                    personaRelacionadaJornadaMaria.setObservaciones(item.getObservacionesPersona());
 
-                personaRelacionadaJornadaMaria.insert();
+                    personaRelacionadaJornadaMaria.insert();
+                });
             });
         }
     }
@@ -76,10 +98,11 @@ public class AsistenteJornadaMariaForm extends AsistenteJornadaMariaFormBase {
 
     /** Invoked to find an entity instance */
     @Override @NotNull public AsistenteJornadaMaria find() {
-        final AsistenteJornadaMaria asistenteJornadaMaria = super.find();
+        final AsistenteJornadaMaria asistenteJornadaMaria = AsistenteJornadaMaria.find(getId());
         asistenteJornadaMaria.getPersonasRelacionadas().forEach(personaAsignada -> {
             final PersonasAsignadasRow personasAsignadasRow = getPersonasAsignadas().add();
 
+            personasAsignadasRow.setIdPersonaAsignada(personaAsignada.getId());
             personasAsignadasRow.setNombre(personaAsignada.getNombre());
             personasAsignadasRow.setApellido(personaAsignada.getApellido());
             personasAsignadasRow.setFechaNacimiento(personaAsignada.getFechaNacimiento());
@@ -94,7 +117,7 @@ public class AsistenteJornadaMariaForm extends AsistenteJornadaMariaFormBase {
     @Override
     public Action validarAsistenciaPersona() {
         if(getPersona() != null) {
-            final AsistenteJornadaMaria asistenteJornadaMaria = AsistenteJornadaMaria.find(getEvento().getId(), getPersona().getId());
+            final AsistenteJornadaMaria asistenteJornadaMaria = findWhere(ASISTENTE_JORNADA_MARIA.PERSONA_ID.eq(getPersona().getId()));
 
             if (asistenteJornadaMaria != null) {
                 return actions().getError().withMessage(asistenteJornadaMaria.getPersona().getNombre() + " " + asistenteJornadaMaria.getPersona().getApellido() + " ya se registró.");
@@ -108,7 +131,7 @@ public class AsistenteJornadaMariaForm extends AsistenteJornadaMariaFormBase {
     @Override
     public Action validarAsistenciaEsposo() {
         if(getPersonaMatrimonio() != null){
-            final AsistenteJornadaMaria asistenteJornadaMaria = AsistenteJornadaMaria.find(getEvento().getId(), getPersonaMatrimonio().getId());
+            final AsistenteJornadaMaria asistenteJornadaMaria = findWhere(ASISTENTE_JORNADA_MARIA.PERSONA_ID.eq(getPersonaMatrimonio().getId()));
 
             if(asistenteJornadaMaria != null) {
                 setPersonaMatrimonio(null);
@@ -133,10 +156,13 @@ public class AsistenteJornadaMariaForm extends AsistenteJornadaMariaFormBase {
     }
 
     private double calcularMontoHijos() {
+        final double montoNiño = getEvento().getMontoNiño().doubleValue();
+        final double montoNiñosDescuento = getEvento().getMontoNiñosDescuento().doubleValue();
+
         if(getPersonasAsignadas().size() == 1)
-            return getEvento().getMontoNiño().doubleValue();
+            return montoNiño;
         else if(getPersonasAsignadas().size() >= 2)
-            return getEvento().getMontoNiñosDescuento().multiply(BigDecimal.valueOf(getPersonasAsignadas().size() - 1)).doubleValue();
+            return montoNiño + (montoNiñosDescuento * (getPersonasAsignadas().size() - 1));
 
         return 0;
     }

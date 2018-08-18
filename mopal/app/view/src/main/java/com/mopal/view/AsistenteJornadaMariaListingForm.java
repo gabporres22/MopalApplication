@@ -38,7 +38,7 @@ public class AsistenteJornadaMariaListingForm extends AsistenteJornadaMariaListi
 
     public void buscar(final Integer idEvento, final Integer idAsistente) {
         getAsistentesJornadaMaria().clear();
-        getAsistentesJornadaMaria().add().populate(AsistenteJornadaMaria.find(idEvento, idAsistente));
+        getAsistentesJornadaMaria().add().populate(AsistenteJornadaMaria.find(idAsistente));
         setTotalRows("");
     }
 
@@ -102,6 +102,7 @@ public class AsistenteJornadaMariaListingForm extends AsistenteJornadaMariaListi
         @Override
         public void populate(@NotNull AsistenteJornadaMaria asistenteJornadaMaria) {
             super.populate(asistenteJornadaMaria);
+            setId(asistenteJornadaMaria.getId());
             setIdEvento(asistenteJornadaMaria.getEvento().getId());
             setIdPersona(asistenteJornadaMaria.getPersona().getId());
             setNombre(asistenteJornadaMaria.getPersona().getNombre());
@@ -125,8 +126,8 @@ public class AsistenteJornadaMariaListingForm extends AsistenteJornadaMariaListi
         @Override
         public Action editarAsistencia() {
             final AsistentesJornadaMariaRow current = getAsistentesJornadaMaria().getCurrent();
-            final AsistenteJornadaMaria asistenteJornadaMaria = AsistenteJornadaMaria.find(getEvento().getId(), current.getIdPersona());
-            final AsistenteJornadaMariaForm form = forms.initialize(AsistenteJornadaMariaForm.class, asistenteJornadaMaria.keyAsString());
+            final AsistenteJornadaMaria asistenteJornadaMaria = AsistenteJornadaMaria.find(current.getId());
+            final AsistenteJornadaMariaForm form = forms.initialize(AsistenteJornadaMariaForm.class, String.valueOf(asistenteJornadaMaria.getId()));
             form.setForUpdate(true);
             return actions().navigate(form).callback(AsistenciaFormMapping.class);
         }
@@ -147,19 +148,12 @@ public class AsistenteJornadaMariaListingForm extends AsistenteJornadaMariaListi
     public static class AsistenciaFormMapping implements MappingCallback<AsistenteJornadaMariaForm, AsistenteJornadaMariaListingForm> {
         @Override
         public void onDelete(@NotNull AsistenteJornadaMariaForm base, @NotNull AsistenteJornadaMariaListingForm out) {
-            search(out);
+            out.getAsistentesJornadaMaria().clear();
+            out.loadAsistentes();
         }
 
         @Override
         public void onSave(@NotNull AsistenteJornadaMariaForm base, @NotNull AsistenteJornadaMariaListingForm out) {
-            if(base.isForCreation()) {
-                out.buscar(base.getEvento().getId(), base.getPersona().getId());
-            } else {
-                search(out);
-            }
-        }
-
-        private void search(final AsistenteJornadaMariaListingForm out) {
             if(out.isFilterPresent()){
                 out.buscar();
             } else {

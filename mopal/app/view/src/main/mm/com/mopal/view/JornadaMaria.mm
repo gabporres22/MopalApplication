@@ -15,6 +15,7 @@ form AsistenteJornadaMariaForm : AsistenteJornadaMaria{
     forUpdate: Boolean, internal, default false;
 
     vertical, col 5 {
+        id                              : id, internal;
         "Evento"                        : evento, display, label_col 4;
         "Persona"                       : persona, on_new_form AsistenteForm, on_change validarAsistenciaPersona, required, label_col 4;
         personaMatrimonio "Esposa/o"    : Asistente, on_new_form AsistenteForm, on_change validarAsistenciaEsposo, hide when forUpdate, optional, label_col 4;
@@ -26,13 +27,15 @@ form AsistenteJornadaMariaForm : AsistenteJornadaMaria{
     vertical, col 7, hide when persona == null{
         "Personas a cargo asignadas": vertical {
             personasAsignadas: table, sortable{
+                idPersonaAsignada                   : Int, internal, optional;
                 nombre          "Nombre"            : String, required;
                 apellido        "Apellido"          : String, required;
                 fechaNacimiento "Fecha Nacimiento"  : Date, on_change updateEdad, to today(), required;
                 edad            "Edad"              : display;
-                grupoReferencia "Grupo"             : String, optional;
+                grupoReferencia "Grupo"             : String, required;
                 observacionesPersona "Observaciones": String, optional;
             };
+
 			horizontal {
 				button(add_row), label_expression "Agregar", on_click updateMontoSugerido, content_style "btn-warning", icon user;
 				button(remove_row), label_expression "Borrar", on_click updateMontoSugeridoAfterRemove, content_style "btn-danger", icon remove;
@@ -70,6 +73,7 @@ form AsistenteJornadaMariaListingForm {
         montoContribucion                   : montoContribucion, internal;
         idEvento                            : Int, internal;
         idPersona                           : Int, internal;
+        id                                  : Int, internal;
         nombre    "Nombre"                  : String, display;
         apellido  "Apellido"                : String, display;
         edad      "Edad"                    : String, display;
