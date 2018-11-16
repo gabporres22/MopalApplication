@@ -29,7 +29,7 @@ import static tekgenesis.common.core.Option.option;
 /** User class for form: AsistenteJornadaPentecostesFormListing */
 public class AsistenteJornadaPentecostesFormListing extends AsistenteJornadaPentecostesFormListingBase {
     //~ Methods ..................................................................................................................
-    final static Evento evento = findWhere(EVENTO.ACTIVO.eq(true).and(EVENTO.TIPO_EVENTO.eq(JORNADA_PENTECOSTES)));
+    final Evento evento = findWhere(EVENTO.ACTIVO.eq(true).and(EVENTO.TIPO_EVENTO.eq(JORNADA_PENTECOSTES)));
 
     private Evento getEvento() {
         return evento;

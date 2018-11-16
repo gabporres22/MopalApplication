@@ -2,8 +2,8 @@ package com.mopal.model schema data;
 
 entity AsistenteRetiroPascua primary_key evento, persona auditable {
     evento              : Evento;
-    tipoCamino          : TipoCamino, default INGRESANTE;
     persona             : Asistente;
+    tipoCamino          : TipoCamino, default INGRESANTE;
     cantidadDePascuas   : Int;
     asistenciaJueves    : Boolean;
     asistenciaViernes   : Boolean;
@@ -13,8 +13,8 @@ entity AsistenteRetiroPascua primary_key evento, persona auditable {
     personasRelacionadas: PRRetiroPascua*;
 }
 
-entity PRRetiroPascua auditable {
-    personaRelacionada: AsistenteRetiroPascua;
+entity PRRetiroPascua {
+    personaRelacionada  : AsistenteRetiroPascua;
     nombre              : String;
     apellido            : String;
     fechaNacimiento     : Date;

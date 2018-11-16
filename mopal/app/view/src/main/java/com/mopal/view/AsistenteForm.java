@@ -12,37 +12,5 @@ public class AsistenteForm extends AsistenteFormBase {
 
     //~ Methods ..................................................................................................................
 
-    @NotNull
-    @Override
-    public Action create() {
-        final AsistenteWidget asistente = getAsistente();
-        final Asistente asistenteObj = Asistente.create();
-        asistente.copyTo(asistenteObj);
-        asistenteObj.persist();
-        setId(asistenteObj.getId());
-        return actions().getDefault();
-    }
 
-    @NotNull
-    @Override
-    public Asistente populate() {
-        final Asistente asistente = find();
-        getAsistente().populate(asistente);
-        return asistente;
-    }
-
-    @NotNull
-    @Override
-    public Action update() {
-        final Asistente asistente = find();
-        getAsistente().copyTo(asistente);
-        asistente.update();
-        return actions().getDefault();
-    }
-
-    @NotNull
-    @Override
-    public Asistente find() {
-        return super.find();
-    }
 }
