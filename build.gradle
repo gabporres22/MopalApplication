@@ -4,7 +4,6 @@ apply plugin: 'idea'
 
 idea {
     project {
-        //if you want to set specific jdk and language level
         jdkName = '1.8'
         languageLevel = '1.8'
     }
@@ -20,8 +19,9 @@ tekgenesis {
     }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.5.1'
+wrapper {
+    gradleVersion = '4.9'
+    distributionType = Wrapper.DistributionType.ALL
 }
 
 subprojects {

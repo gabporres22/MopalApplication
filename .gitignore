@@ -1,6 +1,5 @@
 .idea/
-.gradle/
-gradle/
+dist/
 target/
 .idea_modules/
 .history
@@ -11,7 +10,6 @@ out
 *.ipr
 *.log
 src_managed/
-.gradle
 build/
 atlassian-ide-plugin.xml
 suigeneris/
