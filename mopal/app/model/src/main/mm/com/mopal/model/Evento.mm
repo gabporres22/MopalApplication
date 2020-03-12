@@ -7,10 +7,6 @@ entity Evento described_by descripcion searchable by {descripcion} {
     activo             : Boolean;
     montoSoltero       : Decimal(10, 2), optional;
     montoMatrimonio    : Decimal(10, 2), optional;
-    montoNiño          : Decimal(10, 2), optional;
-    montoNiñosDescuento : Decimal(10, 2), optional;
+    montoNino          : Decimal(10, 2), optional;
+    montoNinosDescuento : Decimal(10, 2), optional;
 }
-
-
-
-

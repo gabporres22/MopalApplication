@@ -14,8 +14,8 @@ form EventoForm : com.mopal.model.Evento {
     "Tipo Evento"     : tipoEvento;
     "Monto Soltero"   : montoSoltero, mask currency;
     "Monto Matrimonio": montoMatrimonio, mask currency;
-    "Monto Niño"      : montoNiño, mask currency;
-    "Monto Niños Dto.": montoNiñosDescuento, mask currency;
+    "Monto Niño"      : montoNino, mask currency;
+    "Monto Niños Dto.": montoNinosDescuento, mask currency;
     "Activo"          : activo;
 
     footer {
@@ -36,8 +36,8 @@ form EventoListing "Evento Listing" {
         "Tipo Evento"     : tipoEvento, display;
         "Monto Soltero"   : montoSoltero, display;
         "Monto Matrimonio": montoMatrimonio, display;
-        "Monto Niño"      : montoNiño, display;
-        "Monto Niños Dto.": montoNiñosDescuento, display;
+        "Monto Niño"      : montoNino, display;
+        "Monto Niños Dto.": montoNinosDescuento, display;
         "Activo"          : activo;
         "Editar"          : button, on_click editarEvento;
     };

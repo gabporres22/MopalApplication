@@ -1,10 +1,7 @@
 package com.mopal.view;
 
-menu MopalMenu {
-    ConfiguracionMenu;
+menu AsistentesMenu {
     AsistenteFormListing;
-    EventosMenu;
-    EncuentrosMenu;
 }
 
 menu ConfiguracionMenu {

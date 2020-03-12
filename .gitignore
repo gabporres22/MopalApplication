@@ -1,4 +1,5 @@
 .idea/
+.gradle/
 dist/
 target/
 .idea_modules/

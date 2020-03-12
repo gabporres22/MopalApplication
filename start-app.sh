@@ -42,10 +42,14 @@ mkdir ${DEPLOY}
 #######################################################################################################################################################
 echo -e "\x1B[32m 1) Installing Mopal on $DEPLOY \x1B[0m"
 #######################################################################################################################################################
-gradle build -x test installDist
+./gradlew build -x test installDist
 
 mkdir ${GUL}
+
+echo "Copiando Suigeneris"
 cp -r suigeneris ${GUL}
+echo "Suigeneris listo !"
+
 #rm ${GUL}/suigeneris/lib/http*.jar
 
 # resources
