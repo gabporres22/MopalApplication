@@ -1,14 +1,18 @@
 package com.mopal.view;
 
-import com.mopal.model.Asistente;
-import com.mopal.model.Barrio;
-import com.mopal.model.g.AsistenteBase;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tekgenesis.form.Action;
+
+import static tekgenesis.common.core.DateOnly.current;
 
 /** User class for form: AsistenteForm */
 public class AsistenteForm extends AsistenteFormBase {
+    @NotNull
+    @Override
+    public Action updateEdad() {
+        setEdadValue(String.valueOf(current().yearsFrom(getFechaNacimiento())) + " años");
+        return actions().getDefault();
+    }
 
     //~ Methods ..................................................................................................................
 

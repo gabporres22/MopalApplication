@@ -1,3 +1,5 @@
+-- @Generated at 2020-03-15 00:46:42
+
 -- SQL for Schema DATA --
 
 -- if NeedsCreateSequence
@@ -59,6 +61,7 @@ create table QName(DATA, ASISTENTE) (
 	CANTIDAD_HIJOS                    int              default 0,
 	TELEFONO_DE_CONTACTO              nvarchar(255),
 	TIPO_ESTADO_CIVIL                 nvarchar(50)     default 'SOLTERO',
+	IMAGEN                            nvarchar(128),
 	UPDATE_TIME                       datetime(3)      default CurrentTime      not null,
 
 	constraint PK_ASISTENTE           primary key (ID)

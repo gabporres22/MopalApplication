@@ -12,4 +12,5 @@ entity Asistente described_by nombre, apellido searchable by {nombre; apellido;}
     cantidadHijos:          Int, optional, default 0;
     telefonoDeContacto:     String, optional;
     tipoEstadoCivil:        EstadoCivil, optional, default SOLTERO;
+    imagen:                 Resource, optional;
 }

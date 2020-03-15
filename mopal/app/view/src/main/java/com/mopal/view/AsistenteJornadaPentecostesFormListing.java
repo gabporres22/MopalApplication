@@ -67,8 +67,8 @@ public class AsistenteJornadaPentecostesFormListing extends AsistenteJornadaPent
 
     private ImmutableList<AsistenteJornadaPentecostes> obtenerAsistentesFiltro(final Option<String> nombre, final Option<String> apellido, final Option<Localidad> localidad, final Option<Nivel> nivel, final Option<Comunidad> comunidad) {
         final Criteria eventoCriteria = EVENTO.ID.eq(getEvento().getId());
-        final Criteria nombreCriteria = nombre.isPresent() ? ASISTENTE.NOMBRE.contains(nombre.get()) : Criteria.EMPTY;
-        final Criteria apellidoCriteria = apellido.isPresent() ? ASISTENTE.APELLIDO.contains(apellido.get()) : Criteria.EMPTY;
+        final Criteria nombreCriteria = nombre.isPresent() ? ASISTENTE.NOMBRE.lower().contains(nombre.get().toLowerCase()) : Criteria.EMPTY;
+        final Criteria apellidoCriteria = apellido.isPresent() ? ASISTENTE.APELLIDO.lower().contains(apellido.get().toLowerCase()) : Criteria.EMPTY;
         final Criteria localidadCriteria = localidad.isPresent() ? ASISTENTE.LOCALIDAD_ID.eq(localidad.get().getId()) : Criteria.EMPTY;
         final Criteria nivelCriteria = nivel.isPresent() ? ASISTENTE.NIVEL_ID.eq(nivel.get().getId()) : Criteria.EMPTY;
         final Criteria comunidadCriteria = comunidad.isPresent() && nivel.isPresent() && !nivel.get().equals(getNivelNinguno()) ? ASISTENTE.COMUNIDAD_ID.eq(comunidad.get().getId()) : Criteria.EMPTY;

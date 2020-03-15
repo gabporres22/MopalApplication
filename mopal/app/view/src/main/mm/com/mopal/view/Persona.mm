@@ -33,7 +33,27 @@ form AsistenteForm "Asistente Form" : Asistente {
     };
 
     "Id"        : id, internal, optional;
-    asistente "": Asistente, widget(AsistenteWidget);
+    "": vertical, col 6 {
+        "Nombre"               : nombre, required, label_col 4;
+        "Apellido"             : apellido, required, label_col 4;
+        "Telefono"             : telefonoDeContacto, optional, custom_mask "####################", label_col 4;
+        "Email"                : email, optional, label_col 4;
+        "Localidad"            : localidad, required, on_new_form LocalidadForm, label_col 4;
+        "Barrio"               : barrio, required, filter(localidad = localidad), on_new_form BarrioForm, label_col 4;
+    };
+
+    "": vertical, col 6 {
+        "Fecha Nacimiento"     : fechaNacimiento, required, label_col 4, on_ui_change updateEdad;
+        edadValue "Edad"       : String, display, label_col 4;
+        "Estado Civil"         : tipoEstadoCivil, required, default SOLTERO, optional, label_col 4;
+        "Cantidad Hijos"       : cantidadHijos, default 0, mask decimal, optional, label_col 4;
+        "Nivel"                : nivel, required, on_new_form NivelForm, label_col 4;
+        "Comunidad"            : comunidad, required, filter (nivelComunidad = nivel), on_new_form ComunidadForm, optional, label_col 4;
+    };
+
+    "": horizontal, col 12 {
+        "Foto": imagen, optional;
+    };
 
     footer, col 12 {
         button(save);
