@@ -1,5 +1,6 @@
 package com.mopal.view;
 
+import com.mopal.model.Asistente;
 import org.jetbrains.annotations.NotNull;
 import tekgenesis.form.Action;
 
@@ -17,4 +18,13 @@ public class AsistenteForm extends AsistenteFormBase {
     //~ Methods ..................................................................................................................
 
 
+    @NotNull
+    @Override
+    public Asistente populate() {
+        final Asistente asistente = super.populate();
+
+        updateEdad();
+
+        return asistente;
+    }
 }

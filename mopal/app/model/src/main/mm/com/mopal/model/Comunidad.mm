@@ -1,9 +1,7 @@
 package com.mopal.model schema data;
 
-entity Comunidad described_by descripcion, barrio searchable by{nivelComunidad; descripcion;}{
+entity Comunidad described_by descripcion searchable by{nivelComunidad; descripcion;}{
     nivelComunidad:     Nivel;
-    localidad:          Localidad;
-    barrio:             Barrio, optional;
     descripcion:        String;
     cantidadPersonas:   Int;
 }

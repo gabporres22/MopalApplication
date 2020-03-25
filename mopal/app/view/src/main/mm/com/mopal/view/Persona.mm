@@ -1,30 +1,9 @@
 package com.mopal.view;
 
-import com.mopal.model.Barrio;
 import com.mopal.model.Localidad;
 import com.mopal.model.Comunidad;
 import com.mopal.model.Nivel;
 import com.mopal.model.Asistente;
-
-widget AsistenteWidget "Asistente Widget" : Asistente {
-    "": vertical, col 6 {
-        "Nombre"               : nombre, required, label_col 4;
-        "Apellido"             : apellido, required, label_col 4;
-        "Telefono"             : telefonoDeContacto, optional, custom_mask "####################", label_col 4;
-        "Email"                : email, optional, label_col 4;
-        "Localidad"            : localidad, required, on_new_form LocalidadForm, label_col 4;
-        "Barrio"               : barrio, required, filter(localidad = localidad), on_new_form BarrioForm, label_col 4;
-    };
-
-    "": vertical, col 6 {
-        "Fecha Nacimiento"     : fechaNacimiento, required, label_col 4, on_ui_change updateEdad;
-        edadValue "Edad"       : String, display, label_col 4;
-        "Estado Civil"         : tipoEstadoCivil, required, default SOLTERO, optional, label_col 4;
-        "Cantidad Hijos"       : cantidadHijos, default 0, mask decimal, optional, label_col 4;
-        "Nivel"                : nivel, required, on_new_form NivelForm, label_col 4;
-        "Comunidad"            : comunidad, required, filter (nivelComunidad = nivel), on_new_form ComunidadForm, optional, label_col 4;
-    };
-}
 
 form AsistenteForm "Asistente Form" : Asistente {
     header {
@@ -33,26 +12,63 @@ form AsistenteForm "Asistente Form" : Asistente {
     };
 
     "Id"        : id, internal, optional;
-    "": vertical, col 6 {
-        "Nombre"               : nombre, required, label_col 4;
-        "Apellido"             : apellido, required, label_col 4;
-        "Telefono"             : telefonoDeContacto, optional, custom_mask "####################", label_col 4;
-        "Email"                : email, optional, label_col 4;
-        "Localidad"            : localidad, required, on_new_form LocalidadForm, label_col 4;
-        "Barrio"               : barrio, required, filter(localidad = localidad), on_new_form BarrioForm, label_col 4;
+
+    "": vertical, col 12 {
+        "": vertical, col 6 {
+            "Nombre"               : nombre, required, label_col 4;
+            "Apellido"             : apellido, required, label_col 4;
+            "Fecha Nacimiento"     : fechaNacimiento, required, label_col 4, on_ui_change updateEdad;
+            edadValue "Edad"       : String, display, label_col 4;
+        };
+
+        "": vertical, col 6 {
+            "DNI"                  : String, required, label_col 4;
+            "Estado Civil"         : tipoEstadoCivil, required, default SOLTERO, optional, label_col 4;
+            "Foto"                 : imagen, optional, label_col 4;
+        };
     };
 
-    "": vertical, col 6 {
-        "Fecha Nacimiento"     : fechaNacimiento, required, label_col 4, on_ui_change updateEdad;
-        edadValue "Edad"       : String, display, label_col 4;
-        "Estado Civil"         : tipoEstadoCivil, required, default SOLTERO, optional, label_col 4;
-        "Cantidad Hijos"       : cantidadHijos, default 0, mask decimal, optional, label_col 4;
-        "Nivel"                : nivel, required, on_new_form NivelForm, label_col 4;
-        "Comunidad"            : comunidad, required, filter (nivelComunidad = nivel), on_new_form ComunidadForm, optional, label_col 4;
-    };
+    "": vertical, col 12 {
+        tabs "": tabs {
+            tabDatosDeContacto "Datos de Contacto": vertical {
+                "": vertical, col 6 {
+                    "Correo electrónico"   : email, optional, label_col 4;
+                    "Celular"              : celularDeContacto, optional , label_col 4;
+                    "Telefono"             : telefonoDeContacto, optional, custom_mask "####################", label_col 4;
+                };
 
-    "": horizontal, col 12 {
-        "Foto": imagen, optional;
+                "": vertical, col 6 {
+                    "Calle"                : calle, required, label_col 4;
+                    "Altura"               : altura, required, label_col 4;
+                    "Localidad"            : localidad, required, on_new_form LocalidadForm, label_col 4;
+                };
+            };
+
+            tabDatosLaborales "Datos Laborales": vertical {
+                "": vertical, col 6 {
+                    "Trabaja actualmente"  : trabajaActualmente, label_col 4;
+                    "Oficio / Trabajo"     : oficioTrabajo, optional, label_col 4;
+                };
+
+                "": vertical, col 6 {
+                    "Nivel estudio maximo": estudioMaximo, required, label_col 4;
+                    "Terminado"           : estudioTerminado, label_col 4;
+
+                };
+            };
+
+            tabDatosDeCamino "Datos de Camino": vertical {
+                "": vertical, col 6 {
+                    "Año de Ingreso"        : anoIngresoObra, required, label_col 4;
+                    "Año de Primera Pascua" : anoPrimeraPascua, required, label_col 4;
+                };
+
+                "": vertical, col 6 {
+                    "Nivel"                : nivel, required, on_new_form NivelForm, label_col 4;
+                    "Comunidad"            : comunidad, required, filter (nivelComunidad = nivel), on_new_form ComunidadForm, optional, label_col 4;
+                };
+            };
+        };
     };
 
     footer, col 12 {
@@ -86,7 +102,6 @@ form AsistenteFormListing on_load load{
         apellido            : apellido, display;
         email               : email, display;
         localidad           : localidad, display;
-        barrio              : barrio, display;
         fechaNacimiento     : fechaNacimiento, display;
         edad ""             : String, display;
         nivel               : nivel, display;

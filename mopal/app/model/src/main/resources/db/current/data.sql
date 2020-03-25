@@ -8,9 +8,6 @@ create sequence QName(DATA, ASISTENTE_SEQ)
 create sequence QName(DATA, ASISTENTE_JORNADA_MARIA_SEQ)
 	start with SequenceStartValue(1) increment by 1 SequenceCache;;
 
-create sequence QName(DATA, BARRIO_SEQ)
-	start with SequenceStartValue(1) increment by 1 SequenceCache;;
-
 create sequence QName(DATA, COMUNIDAD_SEQ)
 	start with SequenceStartValue(1) increment by 1 SequenceCache;;
 
@@ -50,16 +47,24 @@ create table QName(DATA, ASISTENTE) (
 	ID                                Serial(1,ASISTENTE_SEQ)                   not null,
 	NOMBRE                            nvarchar(255)    default EmptyString      not null,
 	APELLIDO                          nvarchar(255)    default EmptyString      not null,
-	EMAIL                             nvarchar(255),
-	LOCALIDAD_ID                      int                                       not null,
-	BARRIO_ID                         int,
 	FECHA_NACIMIENTO                  date             default CurrentDate      not null,
-	NIVEL_ID                          int                                       not null,
-	COMUNIDAD_ID                      int,
-	CANTIDAD_HIJOS                    int              default 0,
-	TELEFONO_DE_CONTACTO              nvarchar(255),
+	DNI                               nvarchar(255)    default EmptyString      not null,
 	TIPO_ESTADO_CIVIL                 nvarchar(50)     default 'SOLTERO',
 	IMAGEN                            nvarchar(128),
+	EMAIL                             nvarchar(255),
+	CELULAR_DE_CONTACTO               nvarchar(255),
+	TELEFONO_DE_CONTACTO              nvarchar(255),
+	CALLE                             nvarchar(255)    default EmptyString      not null,
+	ALTURA                            int              default 0                not null,
+	LOCALIDAD_ID                      int                                       not null,
+	TRABAJA_ACTUALMENTE               boolean          default False CheckBoolConstraint(ASISTENTE_TRABAJA_ACT_70709D_B, TRABAJA_ACTUALMENTE) not null,
+	OFICIO_TRABAJO                    nvarchar(255),
+	ESTUDIO_MAXIMO                    nvarchar(255)    default EmptyString      not null,
+	ESTUDIO_TERMINADO                 boolean          default False CheckBoolConstraint(ASISTENTE_ESTUDIO_TERMINADO_B, ESTUDIO_TERMINADO) not null,
+	ANO_INGRESO_OBRA                  int              default 0                not null,
+	ANO_PRIMERA_PASCUA                int              default 0                not null,
+	NIVEL_ID                          int                                       not null,
+	COMUNIDAD_ID                      int                                       not null,
 	UPDATE_TIME                       datetime(3)      default CurrentTime      not null,
 
 	constraint PK_ASISTENTE           primary key (ID)
@@ -116,20 +121,9 @@ create table QName(DATA, ASISTENTE_RETIRO_PASCUA) (
 	constraint PK_ASISTENTE_RETIRO_PASCUA primary key (EVENTO_ID,PERSONA_ID)
 );;
 
-create table QName(DATA, BARRIO) (
-	ID                                Serial(1,BARRIO_SEQ)                      not null,
-	LOCALIDAD_ID                      int                                       not null,
-	DESCRIPCION                       nvarchar(255)    default EmptyString      not null,
-	UPDATE_TIME                       datetime(3)      default CurrentTime      not null,
-
-	constraint PK_BARRIO              primary key (ID)
-);;
-
 create table QName(DATA, COMUNIDAD) (
 	ID                                Serial(1,COMUNIDAD_SEQ)                   not null,
 	NIVEL_COMUNIDAD_ID                int                                       not null,
-	LOCALIDAD_ID                      int                                       not null,
-	BARRIO_ID                         int,
 	DESCRIPCION                       nvarchar(255)    default EmptyString      not null,
 	CANTIDAD_PERSONAS                 int              default 0                not null,
 	UPDATE_TIME                       datetime(3)      default CurrentTime      not null,
@@ -293,10 +287,6 @@ alter table QName(DATA, ASISTENTE) add constraint LOCALIDAD_ASISTENTE_FK
 	foreign key (LOCALIDAD_ID)
 	references QName(DATA, LOCALIDAD) (ID);;
 
-alter table QName(DATA, ASISTENTE) add constraint BARRIO_ASISTENTE_FK
-	foreign key (BARRIO_ID)
-	references QName(DATA, BARRIO) (ID);;
-
 alter table QName(DATA, ASISTENTE) add constraint NIVEL_ASISTENTE_FK
 	foreign key (NIVEL_ID)
 	references QName(DATA, NIVEL) (ID);;
@@ -337,21 +327,9 @@ alter table QName(DATA, ASISTENTE_RETIRO_PASCUA) add constraint PERSONA_ASISTENT
 	foreign key (PERSONA_ID)
 	references QName(DATA, ASISTENTE) (ID);;
 
-alter table QName(DATA, BARRIO) add constraint LOCALIDAD_BARRIO_FK
-	foreign key (LOCALIDAD_ID)
-	references QName(DATA, LOCALIDAD) (ID);;
-
 alter table QName(DATA, COMUNIDAD) add constraint NIVEL_COMUNIDAD_COMUNIDAD_FK
 	foreign key (NIVEL_COMUNIDAD_ID)
 	references QName(DATA, NIVEL) (ID);;
-
-alter table QName(DATA, COMUNIDAD) add constraint LOCALIDAD_COMUNIDAD_FK
-	foreign key (LOCALIDAD_ID)
-	references QName(DATA, LOCALIDAD) (ID);;
-
-alter table QName(DATA, COMUNIDAD) add constraint BARRIO_COMUNIDAD_FK
-	foreign key (BARRIO_ID)
-	references QName(DATA, BARRIO) (ID);;
 
 alter table QName(DATA, COMUNIDAD_PASTOR) add constraint COMUNIDAD_COMUNIDAD_PASTOR_FK
 	foreign key (COMUNIDAD_ID)
@@ -399,7 +377,6 @@ alter table QName(DATA, PRRETIRO_PASCUA) add constraint PERSONA_RELACIONADA__F87
 -- if NeedsSerialComment
 comment on column QName(DATA,ASISTENTE).ID                 is 'Serial(1,ASISTENTE_SEQ)';;
 comment on column QName(DATA,ASISTENTE_JORNADA_MARIA).ID   is 'Serial(1,ASISTENTE_JORNADA_MARIA_SEQ)';;
-comment on column QName(DATA,BARRIO).ID                    is 'Serial(1,BARRIO_SEQ)';;
 comment on column QName(DATA,COMUNIDAD).ID                 is 'Serial(1,COMUNIDAD_SEQ)';;
 comment on column QName(DATA,COMUNIDAD_PASTOR).ID          is 'Serial(1,COMUNIDAD_PASTOR_SEQ)';;
 comment on column QName(DATA,DETALLE_ASISTENCIA_ENCUENTRO).ID is 'Serial(1,DETALLE_ASISTENCIA__6D60B2_SEQ)';;
