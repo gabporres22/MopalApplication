@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html sg-view="com.mopal.view.Views">
+    <head>
+        <title>Mopal App - Centro San José Obrero</title>
+
+        <!-- #img looks resources in the img folder: /resources/img/favicon.ico -->
+        <link rel="icon" href="{{#img}}favicon.ico{{/img}}"/>
+
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+
+        <!-- #css-theme loads the theme.css if present or defaults to the suigeneris bootstrap theme -->
+        <link rel="stylesheet" href="{{#css-theme}}{{/css-theme}}" id="theme">
+        <style>
+            .navbar h3 { margin: 0; padding: 5px 5px 5px 0; }
+            .brand.loadBrand { margin-top: 8px; padding-left: 165px; }
+        </style>
+    </head>
+
+    <body ng-controller="AdminCtrl">
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a id="userDropdown" class="dropdown-toggle user-dropdown">
+                            <span id="sg-user-name" data-sg-type="userName" data-sg-config='{"picture":true, "username":true}'></span>
+                        </a>
+                        <ul class="dropdown-menu" id="userOptions">
+                            <li id="sg-user-profile" data-sg-type="userProfile"></li>
+                            <li id="sg-shortcuts" data-sg-type="shortcuts"></li>
+                            <li class="divider"></li>
+                            <li id="sg-change-ou" data-sg-type="changeOu"></li>
+                            <li id="sg-switch-user" data-sg-type="switchUser"></li>
+                            <li id="sg-logout" data-sg-type="logout"></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <div class="navbar-header">
+                    <button id="sg-toggle-menu" data-sg-type="toggleMenu"></button>
+                    <a class="navbar-brand" href="/" style="background-image: url('/public/img/logo_maria.png'); width: 30px; background-size: 28px;"></a>
+                </div>
+
+                <div class="navbar-collapse collapse push-overlay-nav">
+                    <div id="sg-menu" data-sg-type="menu" data-sg-config='{"position":"top"}'>
+                        <div class="loading-menu">
+                            Loading...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid">
+            <div id="form" data-sg-type="form" data-sg-config='{"history":true, "fqn": "com.mopal.view.AsistenteFormListing"}'></div>
+        </div>
+
+        <!-- Suigeneris forms bootstrap: includes the javascript files for the suigeneris forms and all the style.css in the project -->
+        {{#sg-forms-bootstrap}}{{/sg-forms-bootstrap}}
+
+        <!-- jquery dependency just needed if there are form Charts in the project-->
+        <!-- <script defer async src="/external/js/jquery-2.2.4.min.js"></script> -->
+    </body>
+</html>

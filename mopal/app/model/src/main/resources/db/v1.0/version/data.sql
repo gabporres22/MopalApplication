@@ -1,5 +1,3 @@
--- @Generated at 2020-03-24 23:11:25
-
 -- SQL for Schema DATA --
 
 -- if NeedsCreateSequence
