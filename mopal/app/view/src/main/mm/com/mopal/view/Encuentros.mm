@@ -11,11 +11,11 @@ form EncuentroForm "Encuentro Form" : Encuentro {
         message(entity), col 12;
     };
 
-    "Id"              : id, internal, optional;
-    nivel "Nivel"     : Nivel, required, disable when id != null;
-    "Comunidad"       : comunidad, filter (nivelComunidad = nivel), disable when nivel == null || id != null, required;
-    "Fecha Encuentro" : fechaEncuentro, default now(), required;
-    "Observaciones"   : observaciones;
+    "Id"                    : id, internal, optional;
+    nivel "Nivel"           : Nivel, combo_box, required, disable when id != null, on_change loadComunidadOptions;
+    comunidad "Comunidad"   : comunidad, combo_box, filter (nivelComunidad = nivel), disable when nivel == null || id != null, optional;
+    "Fecha Encuentro"       : fechaEncuentro, default now(), required;
+    "Observaciones"         : observaciones;
 
     footer {
         button(save);
@@ -29,13 +29,9 @@ form EncuentroListingForm "" {
         message(title), col 12;
     };
 
-    userAdmin: Boolean, internal, default false;
-
     filtros "Filtros": vertical, collapsible {
-        nivelFiltro          : Nivel, combo_box, hint "Nivel", optional, col 2, hide when userAdmin;
-        comunidadFiltro      : Comunidad, combo_box, hint "Comunidad", filter (nivelComunidad = nivelFiltro), disable when nivelFiltro == null, optional, col 2, hide when userAdmin;
-        nivelFiltroAdmin     : Nivel, hint "Nivel", optional, col 2, hide when !userAdmin;
-        comunidadFiltroAdmin : Comunidad, hint "Comunidad", filter (nivelComunidad = nivelFiltroAdmin), disable when nivelFiltroAdmin == null, optional, col 2, hide when !userAdmin;
+        nivelFiltro          : Nivel, combo_box, hint "Nivel", optional, col 2, on_change loadComunidadOptions;
+        comunidadFiltro      : Comunidad, combo_box, hint "Comunidad", filter (nivelComunidad = nivelFiltro), disable when nivelFiltro == null, optional, col 2;
         fechaDesdeFiltro     : Date, optional, hint "Desde", col 2;
         fechaHastaFiltro     : Date, optional, hint "Hasta", col 2;
     };

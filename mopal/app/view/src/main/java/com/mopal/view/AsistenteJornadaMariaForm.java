@@ -156,13 +156,13 @@ public class AsistenteJornadaMariaForm extends AsistenteJornadaMariaFormBase {
     }
 
     private double calcularMontoHijos() {
-        final double montoNiño = getEvento().getMontoNino().doubleValue();
-        final double montoNiñosDescuento = getEvento().getMontoNinosDescuento().doubleValue();
+        final double montoNino = getEvento().getMontoNino().doubleValue();
+        final double montoNinosDescuento = getEvento().getMontoNinosDescuento().doubleValue();
 
         if(getPersonasAsignadas().size() == 1)
-            return montoNiño;
+            return montoNino;
         else if(getPersonasAsignadas().size() >= 2)
-            return montoNiño + (montoNiñosDescuento * (getPersonasAsignadas().size() - 1));
+            return montoNino + (montoNinosDescuento * (getPersonasAsignadas().size() - 1));
 
         return 0;
     }

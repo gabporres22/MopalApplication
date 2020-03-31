@@ -10,6 +10,8 @@ enum EstadoCivil{
     CASADO;
     SEPARADO;
     VIUDO;
+    DIVORCIADO;
+    NOVIAZGO;
 }
 
 enum TipoEvento{

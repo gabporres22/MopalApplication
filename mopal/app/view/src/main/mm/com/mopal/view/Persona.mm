@@ -22,7 +22,7 @@ form AsistenteForm "Asistente Form" : Asistente {
         };
 
         "": vertical, col 6 {
-            "DNI"                  : String, required, label_col 4;
+            "DNI"                  : dni, required, custom_mask "########", label_col 4;
             "Estado Civil"         : tipoEstadoCivil, required, default SOLTERO, optional, label_col 4;
             "Foto"                 : imagen, optional, label_col 4;
         };
@@ -32,8 +32,8 @@ form AsistenteForm "Asistente Form" : Asistente {
         tabs "": tabs {
             tabDatosDeContacto "Datos de Contacto": vertical {
                 "": vertical, col 6 {
-                    "Correo electrónico"   : email, optional, label_col 4;
-                    "Celular"              : celularDeContacto, optional , label_col 4;
+                    "Correo electrónico"   : email, mail_field, optional, label_col 4;
+                    "Celular"              : celularDeContacto, optional , custom_mask "####################", label_col 4;
                     "Telefono"             : telefonoDeContacto, optional, custom_mask "####################", label_col 4;
                 };
 
@@ -103,7 +103,7 @@ form AsistenteFormListing on_load load{
         email               : email, display;
         localidad           : localidad, display;
         fechaNacimiento     : fechaNacimiento, display;
-        edad ""             : String, display;
+        edad                : String, display;
         nivel               : nivel, display;
         comunidad           : comunidad, display;
         telefonoDeContacto  : telefonoDeContacto, display;
